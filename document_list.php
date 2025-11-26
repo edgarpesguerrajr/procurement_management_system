@@ -4,7 +4,7 @@
 		<div class="card-header">
 			<?php if($_SESSION['login_type'] != 3): ?>
 			<div class="card-tools">
-				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_document"><i class="fa fa-plus"></i> Add New project</a>
+				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_document"><i class="fa fa-plus"></i> Add New Document</a>
 			</div>
 			<?php endif; ?>
 		</div>
@@ -35,7 +35,7 @@
 					// Show documents to all users (both Admin and Employee). Previously there were
 					// filters for manager or specific user ids; those are removed to allow global visibility.
 					$where = "";
-					$qry = $conn->query("SELECT * FROM project_list $where order by particulars asc");
+					$qry = $conn->query("SELECT * FROM project_list $where order by id asc");
 					while($row= $qry->fetch_assoc()):
 						$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 						unset($trans['"'], $trans['<'], $trans['>'], $trans['<h2']);

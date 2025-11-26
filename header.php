@@ -116,6 +116,29 @@
       background: #1a1a1a !important;
       color: #e0e0e0 !important;
     }
+    /* Select2 results/options - ensure all options and highlighted state are dark */
+    body.dark-mode .select2-container--bootstrap4 .select2-dropdown,
+    body.dark-mode .select2-container--bootstrap4 .select2-results__options,
+    body.dark-mode .select2-container--bootstrap4 .select2-results__option,
+    body.dark-mode .select2-container--bootstrap4 .select2-results__option--highlighted,
+    body.dark-mode .select2-container--default .select2-dropdown,
+    body.dark-mode .select2-container--default .select2-results__option,
+    body.dark-mode .select2-container--default .select2-results__option--highlighted {
+      background: #1a1a1a !important;
+      color: #e0e0e0 !important;
+    }
+    body.dark-mode .select2-container--bootstrap4 .select2-search--dropdown .select2-search__field,
+    body.dark-mode .select2-container--default .select2-search--dropdown .select2-search__field {
+      background: #151515 !important;
+      color: #e0e0e0 !important;
+      border-color: #2a2a2a !important;
+    }
+    /* active/hovered option contrast */
+    body.dark-mode .select2-container--bootstrap4 .select2-results__option--highlighted,
+    body.dark-mode .select2-container--default .select2-results__option--highlighted {
+      background: #222 !important;
+      color: #fff !important;
+    }
     /* Small box (dashboard count) */
     body.dark-mode .small-box,
     body.dark-mode .small-box.bg-light {
@@ -285,6 +308,29 @@
     body.dark-mode .main-footer a,
     body.dark-mode footer a {
       color: #e0e0e0 !important;
+    }
+    /* Sidebar nav (AdminLTE) dark-mode adjustments */
+    body.dark-mode .main-sidebar .nav-link {
+      color: #d4d4d4 !important;
+    }
+    body.dark-mode .main-sidebar .nav-link .nav-icon {
+      color: #bdbdbd !important;
+    }
+    body.dark-mode .main-sidebar .nav-link.active {
+      background-color: #0b5ed7 !important;
+      color: #fff !important;
+    }
+    body.dark-mode .main-sidebar .nav-treeview .nav-link {
+      color: #cfcfcf !important;
+      background: transparent !important;
+    }
+    body.dark-mode .main-sidebar .nav-treeview .nav-link.active {
+      background-color: rgba(11,94,215,0.12) !important;
+      color: #fff !important;
+    }
+    body.dark-mode .main-sidebar .brand-link {
+      background: #1b1b1b !important;
+      color: #e6e6e6 !important;
     }
   </style>
   

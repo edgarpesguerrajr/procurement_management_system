@@ -50,7 +50,7 @@
                             $stat = array("Pending", "Started", "On-Progress", "On-Hold", "Over Due", "Done");
                             // Show documents to all users (both Admin and Employee)
                             $where = "";
-                            $qry = $conn->query("SELECT * FROM project_list $where order by particulars asc");
+                            $qry = $conn->query("SELECT * FROM project_list $where order by id asc");
                             while ($row = $qry->fetch_assoc()):
                                 $prog = 0;
                                 $prog = $prog > 0 ? number_format($prog, 2) : $prog;

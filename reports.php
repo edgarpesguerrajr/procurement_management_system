@@ -28,7 +28,7 @@
                         $stat = array("Pending", "Started", "On-Progress", "On-Hold", "Over Due", "Done");
                         // Show documents to all users (both Admin and Employee)
                         $where = "";
-                        $qry = $conn->query("SELECT * FROM project_list $where order by particulars asc");
+                        $qry = $conn->query("SELECT * FROM project_list $where order by id asc");
                         while ($row = $qry->fetch_assoc()):
                             if ($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
                                 if ($prod > 0 || $cprog > 0)

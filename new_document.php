@@ -68,7 +68,7 @@
 								   name="end_date"
 								   class="form-control form-control-sm"
 								   autocomplete="off"
-								   value="<?= isset($end_date) && $end_date !== '' ? htmlspecialchars(date('Y-m-d', strtotime($end_date)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($end_date) && $end_date !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($end_date)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 				</div>
@@ -76,10 +76,10 @@
 				<div class="row border-top pt-3">
 					<div class="col-md-3">
 						<div class="form-group">
-							<label for="mop">MOP</label>
+							<label for="mop">Mode of Procurement</label>
 							<select name="mop" id="mop" class="custom-select custom-select-sm">
 								<option value="" <?= !isset($mop) || $mop === '' ? 'selected' : '' ?>>No Data Available</option>
-								<option value="svp" <?= isset($mop) && $mop === 'svp' ? 'selected' : '' ?>>SVP</option>
+								<option value="Single Value Procurement" <?= isset($mop) && $mop === 'Single Value Procurement' ? 'selected' : '' ?>>Single Value Procurement</option>
 								<option value="lease" <?= isset($mop) && $mop === 'lease' ? 'selected' : '' ?>>LEASE OF VENUE</option>
 								<option value="repeat" <?= isset($mop) && $mop === 'repeat' ? 'selected' : '' ?>>REPEAT ORDER</option>
 								<option value="a_to_a" <?= isset($mop) && $mop === 'a_to_a' ? 'selected' : '' ?>>A-TO-A</option>
@@ -91,26 +91,26 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label for="received_bac_first">received by BAC from BO</label>
-							<input type="date"
-								   class="form-control form-control-sm"
-								   autocomplete="off"
-								   name="received_bac_first"
-								   id="received_bac_first"
-								   value="<?= isset($received_bac_first) && $received_bac_first !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_bac_first)), ENT_QUOTES) : '' ?>">
+							<input type="text"
+								class="form-control form-control-sm datetimepicker"
+								autocomplete="off"
+								name="received_bac_first"
+								id="received_bac_first"
+								value="<?= isset($received_bac_first) && $received_bac_first !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_bac_first)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 
-					<div class="col-md-3">
-						<div class="form-group">
-							<label for="received_gso_first">received by GSO</label>
-							<input type="date"
-								   class="form-control form-control-sm"
-								   autocomplete="off"
-								   name="received_gso_first"
-								   id="received_gso_first"
-								   value="<?= isset($received_gso_first) && $received_gso_first !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_gso_first)), ENT_QUOTES) : '' ?>">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="received_gso_first">received by GSO</label>
+								<input type="text"
+									   class="form-control form-control-sm datetimepicker"
+									   autocomplete="off"
+									   name="received_gso_first"
+									   id="received_gso_first"
+									   value="<?= isset($received_gso_first) && $received_gso_first !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_gso_first)), ENT_QUOTES) : '' ?>">
+							</div>
 						</div>
-					</div>
 
 					<div class="col-md-3">
 						<div class="form-group">
@@ -162,12 +162,12 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label for="received_bac_third" class="control-label">received by BAC</label>
-								<input type="date"
-									   class="form-control form-control-sm"
-									   autocomplete="off"
-									   name="received_bac_third"
-									   id="received_bac_third"
-									   value="<?= isset($received_bac_third) && $received_bac_third !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_bac_third)), ENT_QUOTES) : '' ?>">
+								    <input type="text"
+									    class="form-control form-control-sm datetimepicker"
+									    autocomplete="off"
+									    name="received_bac_third"
+									    id="received_bac_third"
+									    value="<?= isset($received_bac_third) && $received_bac_third !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_bac_third)), ENT_QUOTES) : '' ?>">
 							</div>
 						</div>
 
@@ -195,12 +195,12 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label for="returned_gso_abstract" class="control-label">returned to GSO for abstract</label>
-								<input type="date"
-									   class="form-control form-control-sm"
+								<input type="text"
+									   class="form-control form-control-sm datetimepicker"
 									   autocomplete="off"
 									   name="returned_gso_abstract"
 									   id="returned_gso_abstract"
-									   value="<?= isset($returned_gso_abstract) && $returned_gso_abstract !== '' ? htmlspecialchars(date('Y-m-d', strtotime($returned_gso_abstract)), ENT_QUOTES) : '' ?>">
+									   value="<?= isset($returned_gso_abstract) && $returned_gso_abstract !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($returned_gso_abstract)), ENT_QUOTES) : '' ?>">
 							</div>
 						</div>
 					</div>
@@ -235,15 +235,15 @@
 				<!--------------------- ROW 5 --------------------->
 				<div class="row">
 					<div class="col-md-4">
-						<div class="form-group">
-							<label for="received_bac_second" class="control-label">received by BAC</label>
-							<input type="date"
-								   class="form-control form-control-sm"
+							<div class="form-group">
+								<label for="received_bac_second" class="control-label">received by BAC</label>
+								<input type="text"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
 								   name="received_bac_second"
 								   id="received_bac_second"
-								   value="<?= isset($received_bac_second) && $received_bac_second !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_bac_second)), ENT_QUOTES) : '' ?>">
-						</div>
+								   value="<?= isset($received_bac_second) && $received_bac_second !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_bac_second)), ENT_QUOTES) : '' ?>">
+							</div>
 					</div>
 
 					<div class="col-md-4">
@@ -259,14 +259,14 @@
 					</div>
 
 					<div class="col-md-4">
-						<div class="form-group">
-							<label for="bac_reso_date" class="control-label">BAC Reso Date</label>
-							<input type="date"
-								   class="form-control form-control-sm"
+							<div class="form-group">
+								<label for="bac_reso_date" class="control-label">BAC Reso Date</label>
+								<input type="text"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
 								   name="bac_reso_date"
 								   id="bac_reso_date"
-								   value="<?= isset($bac_reso_date) && $bac_reso_date !== '' ? htmlspecialchars(date('Y-m-d', strtotime($bac_reso_date)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($bac_reso_date) && $bac_reso_date !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($bac_reso_date)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 				</div>
@@ -274,15 +274,15 @@
 				<!--------------------- ROW 6 --------------------->
 				<div class="row">
 					<div class="col-md-4">
-						<div class="form-group">
-							<label for="received_gso_second" class="control-label">received by GSO</label>
-							<input type="date"
-								   class="form-control form-control-sm"
+							<div class="form-group">
+								<label for="received_gso_second" class="control-label">received by GSO</label>
+								<input type="text"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
 								   name="received_gso_second"
 								   id="received_gso_second"
-								   value="<?= isset($received_gso_second) && $received_gso_second !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_gso_second)), ENT_QUOTES) : '' ?>">
-						</div>
+								   value="<?= isset($received_gso_second) && $received_gso_second !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_gso_second)), ENT_QUOTES) : '' ?>">
+							</div>
 					</div>
 
 					<div class="col-md-4">
@@ -298,14 +298,14 @@
 					</div>
 
 					<div class="col-md-4">
-						<div class="form-group">
-							<label for="po_date" class="control-label">PO DATE</label>
-							<input type="date"
-								   class="form-control form-control-sm"
+							<div class="form-group">
+								<label for="po_date" class="control-label">PO DATE</label>
+								<input type="text"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
 								   name="po_date"
 								   id="po_date"
-								   value="<?= isset($po_date) && $po_date !== '' ? htmlspecialchars(date('Y-m-d', strtotime($po_date)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($po_date) && $po_date !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($po_date)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 				</div>
@@ -325,14 +325,14 @@
 					</div>
 
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="air_date" class="control-label">AIR Date</label>
-							<input type="date"
+							<div class="form-group">
+								<label for="air_date" class="control-label">AIR Date</label>
+								<input type="text"
 								   id="air_date"
 								   name="air_date"
-								   class="form-control form-control-sm"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
-								   value="<?= isset($air_date) && $air_date !== '' ? htmlspecialchars(date('Y-m-d', strtotime($air_date)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($air_date) && $air_date !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($air_date)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 				</div>
@@ -340,26 +340,26 @@
 				<!--------------------- ROW 8 --------------------->
 				<div class="row">
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="received_bo" class="control-label">Received by BO</label>
-							<input type="date"
+							<div class="form-group">
+								<label for="received_bo" class="control-label">Received by BO</label>
+								<input type="text"
 								   id="received_bo"
 								   name="received_bo"
-								   class="form-control form-control-sm"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
-								   value="<?= isset($received_bo) && $received_bo !== '' ? htmlspecialchars(date('Y-m-d', strtotime($received_bo)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($received_bo) && $received_bo !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($received_bo)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="return_gso_completion" class="control-label">Return to GSO for completion of Docs</label>
-							<input type="date"
+							<div class="form-group">
+								<label for="return_gso_completion" class="control-label">Return to GSO for completion of Docs</label>
+								<input type="text"
 								   id="return_gso_completion"
 								   name="return_gso_completion"
-								   class="form-control form-control-sm"
+								   class="form-control form-control-sm datetimepicker"
 								   autocomplete="off"
-								   value="<?= isset($return_gso_completion) && $return_gso_completion !== '' ? htmlspecialchars(date('Y-m-d', strtotime($return_gso_completion)), ENT_QUOTES) : '' ?>">
+								   value="<?= isset($return_gso_completion) && $return_gso_completion !== '' ? htmlspecialchars(date('Y/m/d H:i', strtotime($return_gso_completion)), ENT_QUOTES) : '' ?>">
 						</div>
 					</div>
 				</div>

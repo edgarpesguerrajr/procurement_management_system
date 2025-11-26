@@ -78,12 +78,12 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 
 							<dl>
 								<dt><b class="border-bottom border-primary">Start Date</b></dt>
-								<dd><?php echo (!empty($start_date) && $start_date !== '0000-00-00') ? date("F d, Y", strtotime($start_date)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($start_date) && strpos($start_date,'0000-00-00') === false) ? date("F d, Y", strtotime($start_date)) : 'No Specified Date'; ?></dd>
 							</dl>
 
 							<dl>
 								<dt><b class="border-bottom border-primary">Target End Date</b></dt>
-								<dd><?php echo (!empty($end_date) && $end_date !== '0000-00-00') ? date("F d, Y", strtotime($end_date)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($end_date) && strpos($end_date,'0000-00-00') === false) ? date("F d, Y", strtotime($end_date)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
@@ -97,7 +97,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 
 							<dl>
 								<dt><b class="border-bottom border-primary">received by BAC from BO</b></dt>
-								<dd><?php echo (!empty($received_bac_first) && $received_bac_first !== '0000-00-00') ? date("F d, Y", strtotime($received_bac_first)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_bac_first) && strpos($received_bac_first,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_bac_first)) : 'No Specified Date'; ?></dd>
 							</dl>
 
 							<dl>
@@ -114,7 +114,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 
 							<dl>
 								<dt><b class="border-bottom border-primary">Received by GSO</b></dt>
-								<dd><?php echo (!empty($received_gso_first) && $received_gso_first !== '0000-00-00') ? date("F d, Y", strtotime($received_gso_first)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_gso_first) && strpos($received_gso_first,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_gso_first)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 
@@ -154,7 +154,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Received by BAC</b></dt>
-								<dd><?php echo (!empty($received_bac_third) && $received_bac_third !== '0000-00-00') ? date("F d, Y", strtotime($received_bac_third)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_bac_third) && strpos($received_bac_third,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_bac_third)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 
@@ -176,7 +176,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-md-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Returned to GSO for Abstract</b></dt>
-								<dd><?php echo (!empty($returned_gso_abstract) && $returned_gso_abstract !== '0000-00-00') ? date("F d, Y", strtotime($returned_gso_abstract)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($returned_gso_abstract) && strpos($returned_gso_abstract,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($returned_gso_abstract)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
@@ -192,7 +192,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Received by BAC</b></dt>
-								<dd><?php echo (!empty($received_bac_second) && $received_bac_second !== '0000-00-00') ? date("F d, Y", strtotime($received_bac_second)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_bac_second) && strpos($received_bac_second,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_bac_second)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 
@@ -206,7 +206,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">BAC Resolution Date</b></dt>
-								<dd><?php echo (!empty($bac_reso_date) && $bac_reso_date !== '0000-00-00') ? date("F d, Y", strtotime($bac_reso_date)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($bac_reso_date) && strpos($bac_reso_date,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($bac_reso_date)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
@@ -221,7 +221,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Received by GSO</b></dt>
-								<dd><?php echo (!empty($received_gso_second) && $received_gso_second !== '0000-00-00') ? date("F d, Y", strtotime($received_gso_second)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_gso_second) && strpos($received_gso_second,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_gso_second)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 
@@ -235,7 +235,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Purchase Order Date</b></dt>
-								<dd><?php echo (!empty($po_date) && $po_date !== '0000-00-00') ? date("F d, Y", strtotime($po_date)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($po_date) && strpos($po_date,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($po_date)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
@@ -251,7 +251,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Air Date</b></dt>
-								<dd><?php echo (!empty($air_date) && $air_date !== '0000-00-00') ? date("F d, Y", strtotime($air_date)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($air_date) && strpos($air_date,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($air_date)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
@@ -266,14 +266,14 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-3">
 							<dl>
 								<dt><b class="border-bottom border-primary">Received by BO</b></dt>
-								<dd><?php echo (!empty($received_bo) && $received_bo !== '0000-00-00') ? date("F d, Y", strtotime($received_bo)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($received_bo) && strpos($received_bo,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($received_bo)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 
 						<div class="col-sm-4">
 							<dl>
 								<dt><b class="border-bottom border-primary">Return to GSO for completion of Docs</b></dt>
-								<dd><?php echo (!empty($return_gso_completion) && $return_gso_completion !== '0000-00-00') ? date("F d, Y", strtotime($return_gso_completion)) : 'No Specified Date'; ?></dd>
+								<dd><?php echo (!empty($return_gso_completion) && strpos($return_gso_completion,'0000-00-00') === false) ? date("F d, Y h:i A", strtotime($return_gso_completion)) : 'No Specified Date'; ?></dd>
 							</dl>
 						</div>
 					</div>
