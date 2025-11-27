@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2025 at 09:11 AM
+-- Generation Time: Nov 27, 2025 at 02:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,7 +68,6 @@ CREATE TABLE `project_list` (
   `id` int(30) NOT NULL,
   `status` tinyint(2) NOT NULL,
   `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
   `manager_id` int(30) NOT NULL,
   `user_ids` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
@@ -76,37 +75,35 @@ CREATE TABLE `project_list` (
   `particulars` text DEFAULT NULL,
   `amount` decimal(15,2) DEFAULT NULL,
   `mop` varchar(50) DEFAULT NULL,
-  `received_bac_first` date DEFAULT NULL,
-  `received_gso_first` date DEFAULT NULL,
+  `received_bac_first` datetime DEFAULT NULL,
+  `received_gso_first` datetime DEFAULT NULL,
   `procurement_type` varchar(50) DEFAULT NULL,
   `remarks_pr_no` varchar(255) DEFAULT NULL,
   `philgeps_posting` varchar(50) DEFAULT NULL,
   `supplier` varchar(200) DEFAULT NULL,
   `contract_cost` decimal(15,2) DEFAULT NULL,
-  `received_bac_second` date DEFAULT NULL,
+  `received_bac_second` datetime DEFAULT NULL,
   `bac_reso_no` varchar(100) DEFAULT NULL,
-  `bac_reso_date` date DEFAULT NULL,
-  `received_gso_second` date DEFAULT NULL,
+  `bac_reso_date` datetime DEFAULT NULL,
+  `received_gso_second` datetime DEFAULT NULL,
   `po_no` varchar(100) DEFAULT NULL,
-  `po_date` date DEFAULT NULL,
+  `po_date` datetime DEFAULT NULL,
   `air_no` varchar(100) DEFAULT NULL,
-  `air_date` date DEFAULT NULL,
-  `received_bo` date DEFAULT NULL,
-  `return_gso_completion` date DEFAULT NULL,
-  `received_bac_third` date DEFAULT NULL,
+  `air_date` datetime DEFAULT NULL,
+  `received_bo` datetime DEFAULT NULL,
+  `return_gso_completion` datetime DEFAULT NULL,
+  `received_bac_third` datetime DEFAULT NULL,
   `rfq_no` varchar(100) DEFAULT NULL,
   `reposting` varchar(50) DEFAULT NULL,
-  `returned_gso_abstract` date DEFAULT NULL
+  `returned_gso_abstract` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `project_list`
 --
 
-INSERT INTO `project_list` (`id`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`, `date_created`, `pr_no`, `particulars`, `amount`, `mop`, `received_bac_first`, `received_gso_first`, `procurement_type`, `remarks_pr_no`, `philgeps_posting`, `supplier`, `contract_cost`, `received_bac_second`, `bac_reso_no`, `bac_reso_date`, `received_gso_second`, `po_no`, `po_date`, `air_no`, `air_date`, `received_bo`, `return_gso_completion`, `received_bac_third`, `rfq_no`, `reposting`, `returned_gso_abstract`) VALUES
-(14, 2, '2025-12-01', '2025-01-29', 0, '', '2025-11-20 13:57:33', '0096', 'Food for \"Balikbayan Day 2025\", January 24, 2025 (6:00AM) -Tanay Municipal Grounds.', 12.00, 'repeat', '2025-01-16', '2025-01-16', 'consolidated', '18', 'With Posting', 'Gillan Marie Catering Services', 87650.00, '2025-01-21', '01-0005', '2025-01-20', '0000-00-00', '2025-01-0003-100', '2025-01-21', '100-2025-0004', '2025-01-27', '2025-01-28', '2025-01-29', '0000-00-00', '', 'With Reposting', '0000-00-00'),
-(20, 4, '2025-10-30', '2025-12-05', 0, '', '2025-11-25 15:26:18', '01014-898', 'Budget for IMS Laptops to Make Systems and Programs', 312.00, 'svp', '2025-11-06', '2025-11-11', 'consolidated', '0000-121234', 'With Posting', 'ASUSTeK ', 400.00, '2025-11-22', '1999-0478', '2025-11-23', '2025-11-26', '0024-989', '2025-11-27', '0809-341', '2025-11-28', '2025-11-30', '2025-12-03', '2025-11-16', '111-0345', 'With Reposting', '2025-11-19'),
-(21, 1, '2025-12-31', '2026-03-25', 0, '', '2025-11-25 15:36:33', '123', 'Server Improvement for 2026', 500000.00, 'lease', '2026-01-06', '2026-01-09', 'single', '009-132', 'Without Posting', 'GIGABYTE', 700000.00, '2026-01-12', '0065-997', '2026-01-14', '2026-01-17', '002-214', '2026-01-19', '00123-121', '2026-01-21', '2026-01-25', '2026-03-02', '0000-00-00', '', '', '0000-00-00');
+INSERT INTO `project_list` (`id`, `status`, `start_date`, `manager_id`, `user_ids`, `date_created`, `pr_no`, `particulars`, `amount`, `mop`, `received_bac_first`, `received_gso_first`, `procurement_type`, `remarks_pr_no`, `philgeps_posting`, `supplier`, `contract_cost`, `received_bac_second`, `bac_reso_no`, `bac_reso_date`, `received_gso_second`, `po_no`, `po_date`, `air_no`, `air_date`, `received_bo`, `return_gso_completion`, `received_bac_third`, `rfq_no`, `reposting`, `returned_gso_abstract`) VALUES
+(14, 2, '2025-12-01', 0, '', '2025-11-20 13:57:33', '0096', 'Food for \"Balikbayan Day 2025\", January 24, 2025 (6:00AM) -Tanay Municipal Grounds.', 12.00, 'repeat', '2025-11-27 08:23:00', '2025-11-27 08:55:00', 'consolidated', '18', 'With Posting', 'Gillan Marie Catering Services', 87650.00, '2025-11-27 08:23:00', '01-0005', '2025-11-27 08:23:00', '2025-11-27 08:23:00', '2025-01-0003-100', '2025-11-27 08:23:00', '100-2025-0004', '2025-11-27 08:23:00', '2025-11-27 08:23:00', '2025-11-27 08:23:00', '2025-11-27 08:54:00', '', 'Without Reposting', '2025-11-27 08:23:00');
 
 -- --------------------------------------------------------
 
@@ -200,7 +197,7 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT for table `project_list`
 --
 ALTER TABLE `project_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `system_settings`
