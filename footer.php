@@ -19,157 +19,157 @@
 <script src="assets/plugins/moment/moment.min.js"></script>
 
 <script>
-	$(document).ready(function () {
-		// Initialize Select2 with Bootstrap4 theme for consistent styling
-		function initSelect2($els){
-			$els.each(function(){
-				var $el = $(this);
-				if(!$el.hasClass('select2-hidden-accessible')){
-					try{
-						$el.select2({
-							theme: 'bootstrap4',
-							width: 'resolve',
-							dropdownParent: $el.closest('form').length ? $el.closest('form') : $('body')
-						});
-					}catch(e){
-						// select2 might not be loaded yet or element not a select
-					}
-				}
-			});
-		}
+    $(document).ready(function () {
+        // Initialize Select2 with Bootstrap4 theme for consistent styling
+        function initSelect2($els){
+            $els.each(function(){
+                var $el = $(this);
+                if(!$el.hasClass('select2-hidden-accessible')){
+                    try{
+                        $el.select2({
+                            theme: 'bootstrap4',
+                            width: 'resolve',
+                            dropdownParent: $el.closest('form').length ? $el.closest('form') : $('body')
+                        });
+                    }catch(e){
+                        // select2 might not be loaded yet or element not a select
+                    }
+                }
+            });
+        }
 
-		// Initialize on explicit .select2 elements
-		initSelect2($('.select2'));
-		// Also initialize on bootstrap .custom-select to make dropdowns consistent
-		initSelect2($('.custom-select').not('.select2'));
-	});
+        // Initialize on explicit .select2 elements
+        initSelect2($('.select2'));
+        // Also initialize on bootstrap .custom-select to make dropdowns consistent
+        initSelect2($('.custom-select').not('.select2'));
+    });
 
-	window.start_load = function () {
-		// Ensure no leftover preloaders remain before adding a new one
-		$('#preloader2').remove();
-		$('body').prepend('<div id="preloader2"></div>')
-	}
+    window.start_load = function () {
+        // Ensure no leftover preloaders remain before adding a new one
+        $('#preloader2').remove();
+        $('body').prepend('<div id="preloader2"></div>')
+    }
 
-	window.end_load = function () {
-		// Fade out and remove any existing preloader elements
-		$('#preloader2').fadeOut('fast', function () {
-			$(this).remove();
-		});
-	}
+    window.end_load = function () {
+        // Fade out and remove any existing preloader elements
+        $('#preloader2').fadeOut('fast', function () {
+            $(this).remove();
+        });
+    }
 
-	window.viewer_modal = function ($src = '') {
-		start_load()
-		var t = $src.split('.')
-		t = t[1]
-		if (t == 'mp4') {
-			var view = $("<video src='" + $src + "' controls autoplay></video>")
-		} else {
-			var view = $("<img src='" + $src + "' />")
-		}
-		$('#viewer_modal .modal-content video,#viewer_modal .modal-content img').remove()
-		$('#viewer_modal .modal-content').append(view)
-		$('#viewer_modal').modal({
-			show: true,
-			backdrop: 'static',
-			keyboard: false,
-			focus: true
-		})
-		end_load()
+    window.viewer_modal = function ($src = '') {
+        start_load()
+        var t = $src.split('.')
+        t = t[1]
+        if (t == 'mp4') {
+            var view = $("<video src='" + $src + "' controls autoplay></video>")
+        } else {
+            var view = $("<img src='" + $src + "' />")
+        }
+        $('#viewer_modal .modal-content video,#viewer_modal .modal-content img').remove()
+        $('#viewer_modal .modal-content').append(view)
+        $('#viewer_modal').modal({
+            show: true,
+            backdrop: 'static',
+            keyboard: false,
+            focus: true
+        })
+        end_load()
 
-	}
+    }
 
-	window.uni_modal = function ($title = '', $url = '', $size = "") {
-		start_load()
-		$.ajax({
-			url: $url,
-			error: err => {
-				console.log()
-				alert("An error occured")
-			},
-			success: function (resp) {
-				if (resp) {
-					$('#uni_modal .modal-title').html($title)
-					$('#uni_modal .modal-body').html(resp)
-					if ($size != '') {
-						$('#uni_modal .modal-dialog').addClass($size)
-					} else {
-						$('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md")
-					}
-					$('#uni_modal').modal({
-						show: true,
-						backdrop: 'static',
-						keyboard: false,
-						focus: true
-					})
-					end_load()
-				}
-			}
-		})
-	}
+    window.uni_modal = function ($title = '', $url = '', $size = "") {
+        start_load()
+        $.ajax({
+            url: $url,
+            error: err => {
+                console.log()
+                alert("An error occured")
+            },
+            success: function (resp) {
+                if (resp) {
+                    $('#uni_modal .modal-title').html($title)
+                    $('#uni_modal .modal-body').html(resp)
+                    if ($size != '') {
+                        $('#uni_modal .modal-dialog').addClass($size)
+                    } else {
+                        $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md")
+                    }
+                    $('#uni_modal').modal({
+                        show: true,
+                        backdrop: 'static',
+                        keyboard: false,
+                        focus: true
+                    })
+                    end_load()
+                }
+            }
+        })
+    }
 
-	window._conf = function ($msg = '', $func = '', $params = []) {
-		$('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
-		$('#confirm_modal .modal-body').html($msg)
-		$('#confirm_modal').modal('show')
-	}
+    window._conf = function ($msg = '', $func = '', $params = []) {
+        $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
+        $('#confirm_modal .modal-body').html($msg)
+        $('#confirm_modal').modal('show')
+    }
 
-	window.alert_toast = function ($msg = 'TEST', $bg = 'success', $pos = '') {
-		var Toast = Swal.mixin({
-			toast: true,
-			position: $pos || 'top-end',
-			showConfirmButton: false,
-			timer: 5000
-		});
-		Toast.fire({
-			icon: $bg,
-			title: $msg
-		})
-	}
+    window.alert_toast = function ($msg = 'TEST', $bg = 'success', $pos = '') {
+        var Toast = Swal.mixin({
+            toast: true,
+            position: $pos || 'top-end',
+            showConfirmButton: false,
+            timer: 5000
+        });
+        Toast.fire({
+            icon: $bg,
+            title: $msg
+        })
+    }
 
-	$(function () {
-		bsCustomFileInput.init();
+    $(function () {
+        bsCustomFileInput.init();
 
-		$('.summernote').summernote({
-			height: 300,
-			toolbar: [
-				['style', ['style']],
-				['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-				['fontname', ['fontname']],
-				['fontsize', ['fontsize']],
-				['color', ['color']],
-				['para', ['ol', 'ul', 'paragraph', 'height']],
-				['table', ['table']],
-				['view', ['undo', 'redo', 'fullscreen', 'codeview', 'help']]
-			]
-		})
+        $('.summernote').summernote({
+            height: 300,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ol', 'ul', 'paragraph', 'height']],
+                ['table', ['table']],
+                ['view', ['undo', 'redo', 'fullscreen', 'codeview', 'help']]
+            ]
+        })
 
-		$('.datetimepicker').datetimepicker({
-			format: 'Y/m/d H:i',
-		})
+        $('.datetimepicker').datetimepicker({
+            format: 'Y/m/d H:i',
+        })
 
-		// If any datetime inputs are intentionally locked (readonly via JS),
-		// destroy their datetimepicker instance so the widget won't open on focus/click.
-		// We keep the input readonly so values can still be set programmatically and submitted.
-		try{
-			$('.datetimepicker.locked-datetime').each(function(){
-				try{
-					$(this).datetimepicker('destroy');
-				}catch(_){
-					// ignore if destroy isn't supported by this plugin/version
-				}
-			});
-		}catch(_){}
+        // If any datetime inputs are intentionally locked (readonly via JS),
+        // destroy their datetimepicker instance so the widget won't open on focus/click.
+        // We keep the input readonly so values can still be set programmatically and submitted.
+        try{
+            $('.datetimepicker.locked-datetime').each(function(){
+                try{
+                    $(this).datetimepicker('destroy');
+                }catch(_){
+                    // ignore if destroy isn't supported by this plugin/version
+                }
+            });
+        }catch(_){}
 
-	})
+    })
 
-	$(".switch-toggle").bootstrapToggle();
-	$('.number').on('input keyup keypress', function () {
-		var val = $(this).val()
-		val = val.replace(/[^0-9]/, '');
-		val = val.replace(/,/g, '');
-		val = val > 0 ? parseFloat(val).toLocaleString("en-US") : 0;
-		$(this).val(val)
-	})
+    $(".switch-toggle").bootstrapToggle();
+    $('.number').on('input keyup keypress', function () {
+        var val = $(this).val()
+        val = val.replace(/[^0-9]/, '');
+        val = val.replace(/,/g, '');
+        val = val > 0 ? parseFloat(val).toLocaleString("en-US") : 0;
+        $(this).val(val)
+    })
 </script>
 
 <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

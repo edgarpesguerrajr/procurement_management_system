@@ -17,7 +17,7 @@
 
     ob_end_flush();
 
-    include 'header.php' 
+    include 'header.php'
 ?>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
