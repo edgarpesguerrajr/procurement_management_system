@@ -1,35 +1,65 @@
-Project: Task Management System using PHP/MySQLi
+Procurement Management System — Functions & Purpose
 
-About The Project
-The Task Management System is a simple project that can help a certain company manage its project task progress. The system has 3 types of system users which are the Admin, Project Manager, and the Regular Employee. The Admin user is those users that has an access to all of the data stored in the database of the system especially on creating and managing system users. The Project Managers are those users that manage the project details and progress under her/his management. The Regular Employees will submit their work productivity in each task of the project which makes the system requires the employee to submit their start and end time range of their work on a certain task and this data will be calculated in the report as project members' work duration.
+Overview
+The Procurement Management System (PMS) centralizes and automates procurement-related workflows for an organization. It tracks procurement documents from request (PR) to purchase order, captures review and approval timestamps, records PHILGEPS posting details (when applicable), supports comments and audit trails, and provides reports and status overviews for managers and administrators.
 
-How the System Works
-The Task Management System users can be only created by admin users. The admin user or the Project Managers will create a new project at first along with some important details and references of the users. When creating a project, the admin or project managers must list all the employees that will handle the project's tasks. After the creation of the project, the regular employees are limited only to adding their work progress for the task of the project that they are assigned. They are also allowed to edit the data of the progress that they only submitted. Then, as the employees regularly updating the system about the progress they have done the project managers will read or scan their activities so the project manager can check or decide if the certain task is done and need to update the task status in the system. For the printable report of the system, only the admin users and project managers has an access to this function or feature of the system.
+Primary Purpose
+- Standardize procurement processes and recordkeeping.
+- Provide a single source of truth for procurement documents and their lifecycle.
+- Improve transparency and traceability by capturing who did what and when.
+- Offer summary views and reports to support decision-making and compliance.
 
-Features:
-Login Page
-Home Page
-Project (CRUD Features)
-Task List Page
-Progress Form
-Report Generation
-User (CRUD Features)
-etc.
-The Task Management System was developed using HTML, PHP/MySQLi, CSS, JavaScript (jQuery/Ajax), and Bootstrap for the design. The source code is fully functional and easy to modify or enhance. Follow the instruction below to have an actual experience using this simple project.
+Key Functions and Modules
+- Document Management
+	- Create, edit and view procurement records (PR No., particulars, supplier, amount, contract cost, dates).
+	- Store relevant timestamps (received by BO/BAC/GSO, PO date, AIR date, return for completion) and render them in the UI.
 
-How to Run
-Download the source code and extract the zip file.
-Download or set up any local web server that runs PHP script.
-Open the web-server database and create a new database name it "tms_db".
-Import the SQL file located in the database folder of the source code.
-Copy and paste the source code to the location where your local web server accessing your local projects. Example for XAMPP('C:\xampp\htdocs')
-Open a web browser and browse the project. E.g [http://localhost/task_management_system]
-Admin Access
-Email: admin@admin.com
-Password: admin123
+- Role-based Access
+	- Admin: full access to all records, users, and reports.
+	- Manager: create and manage procurement documents, review progress and comments for assigned projects.
+	- Regular user/Staff: view documents assigned to them and submit or update progress/comments as permitted.
 
-I hope this Task Management System will help you with what you are looking for, feel free to download and modify the source code.
+- PHILGEPS Posting Controls
+	- Support for tracking whether a procurement was posted to PHILGEPS and related fields (RFQ No., reposting, returned for abstract).
+	- If a document is marked "Without Posting", PHILGEPS-only fields are excluded from completion calculations.
 
-Explore more on this website for more source codes and tutorials.
+- Timestamp Automation & Immutability
+	- "Set now" checkboxes allow users to quickly stamp current datetime into fields.
+	- Inputs set via "Set now" are readonly to avoid accidental edits; certain key timestamps (e.g., first received timestamp) can be treated as immutable by server logic.
 
-Enjoy!
+- Progress Tracking
+	- Document progress is computed as the ratio of completed form fields to total required fields (configurable list), with PHILGEPS and remarks fields optionally excluded depending on procurement type or posting choice.
+	- Progress is shown as a percentage and progress bar in document lists.
+
+- Comments and Activity Feed
+	- Users can add comments tied to a document; comments are stored with user and timestamp and support view/delete operations (permissioned).
+
+- Reports & Exports
+	- Generate printable or exportable reports summarizing procurement activity, timelines, and costs.
+
+- Simple Audit / History
+	- Record creation and update timestamps for records; server-side enforcement prevents unauthorized changes to protected fields.
+
+Implementation Notes
+- Technology stack: PHP (procedural with small action class), MySQL/MariaDB (mysqli), jQuery/AJAX, Bootstrap for UI.
+- Formatted datetimes in the UI use a consistent input format; server normalizes inputs to MySQL datetime format before saving.
+- The application uses server-side validation in `save_project()` and other endpoints to ensure required fields are present and to normalize values.
+
+Getting Started (developer / local run)
+1. Place the project folder inside your webserver document root (e.g., `C:\xampp\htdocs\procurement_management_system`).
+2. Create a MySQL database and import the provided SQL schema file (e.g., `pms_db.sql`).
+3. Update `db_connect.php` with your database credentials.
+4. Open the app in a browser (e.g., `http://localhost/procurement_management_system/index.php`).
+
+Tips for Use and Customization
+- To change which fields affect progress, update the fields list in `document_list.php` or implement a configurable settings table.
+- To make immutable rules stricter, enforce them in `admin_class.php::save_project()` before building SQL updates.
+- For security and correctness, consider converting raw SQL string concatenation to prepared statements.
+
+Contact
+If you need help extending or customizing the system (reports, security hardening, or UI improvements), provide the specific feature request and I can assist with targeted code changes.
+
+License & Notes
+This project is intended as an educational starting point. Review and adapt validation, security, and deployment practices before using in a production environment.
+
+-- End of Document
