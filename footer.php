@@ -29,6 +29,8 @@
                         $el.select2({
                             theme: 'bootstrap4',
                             width: 'resolve',
+                            // Disable the built-in search box inside dropdowns
+                            minimumResultsForSearch: Infinity,
                             dropdownParent: $el.closest('form').length ? $el.closest('form') : $('body')
                         });
                     }catch(e){

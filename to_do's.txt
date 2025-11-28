@@ -1,0 +1,27 @@
+Amount and Contract Cost - done
+- make the separator visible when typing
+
+Specify the office
+- what office did the document come from before receiving 
+
+Mode of Procurement
+- different form for single and consolidated
+- remove the remarks (PR no.)
+
+AIR
+- add treasury and budget to receiving form
+
+Status
+- automatically update the status of the document when answering in the form
+
+Highliting of done input field - done
+- change the color when the input field have already data
+
+Contract Cost
+- instead of supplier only, add the contract cost on the document list page
+- ex. ASUS - Php 30,500.00
+
+RFQ
+- in the PHILGEPS posting, update the hidden effect
+- only require the RFQ no. when without posting
+- require all field when with posting
