@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <div class="form-group">
                             <label>Status</label>
                             <select name="status" id="status" class="custom-select custom-select-sm">
@@ -58,7 +58,7 @@
                                 <option value="5" <?= isset($status) && $status == 5 ? 'selected' : '' ?>>Done</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!--------------------- ROW 3 --------------------->
                 <div class="row border-top pt-3">
@@ -573,13 +573,11 @@ $(function () {
         // Client-side validation for required fields
         var pr_no = $.trim($('[name="pr_no"]').val() || '');
         var particulars = $.trim($('[name="particulars"]').val() || '');
-        var status = $('[name="status"]').val();
         var start_date = $.trim($('[name="start_date"]').val() || '');
 
         var missing = [];
         if (!pr_no) missing.push('PR No.');
         if (!particulars) missing.push('Particulars');
-        if (typeof status === 'undefined' || status === null || status === '') missing.push('Status');
         if (!start_date) missing.push('Start Date');
 
         if (missing.length > 0) {
@@ -673,4 +671,100 @@ $(function () {
             toggleRemarksAvailability();
         });
     });
+
+    // --- Begin: Improved thousand-separator formatting for numeric inputs ---
+    (function(){
+        function formatNumberString(val){
+            if(typeof val !== 'string') return val;
+            var negative = val.charAt(0) === '-';
+            if(negative) val = val.slice(1);
+            // keep track if user typed a trailing dot
+            var hasTrailingDot = val.charAt(val.length-1) === '.';
+            // collapse multiple dots: keep first
+            var firstDotIndex = val.indexOf('.');
+            var raw = firstDotIndex >= 0 ? val.slice(0, firstDotIndex) + '.' + val.slice(firstDotIndex+1).replace(/\./g,'') : val;
+            var parts = raw.split('.');
+            var intPart = parts[0].replace(/[^0-9]/g,'');
+            // allow empty intPart (user may type ".95")
+            var withCommas = intPart === '' ? '' : intPart.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+            var decPart = parts.length > 1 ? parts.slice(1).join('').replace(/[^0-9]/g,'') : '';
+            var out = withCommas + (decPart.length ? '.' + decPart : (hasTrailingDot ? '.' : ''));
+            if(negative) out = '-' + out;
+            return out;
+        }
+
+        function setCaretByDigitCount(el, digitsBeforeCaret, digitsAfterDecimal, wasAfterDecimal){
+            var v = el.value;
+            var i = 0, digitsSeen = 0;
+            if(!wasAfterDecimal){
+                for(i=0;i<v.length;i++){
+                    if(v.charAt(i).match(/\d/)) digitsSeen++;
+                    if(digitsSeen >= digitsBeforeCaret) { i = i+1; break; }
+                }
+                if(digitsBeforeCaret === 0) i = 0;
+                if(i > v.length) i = v.length;
+                el.setSelectionRange(i,i);
+                return;
+            } else {
+                var dotPos = v.indexOf('.');
+                if(dotPos === -1){
+                    // no decimal in formatted value; place at end
+                    el.setSelectionRange(v.length, v.length);
+                    return;
+                }
+                // move to dot + digitsAfterDecimal
+                var pos = dotPos + 1;
+                var seen = 0;
+                for(i = dotPos+1; i < v.length; i++){
+                    if(v.charAt(i).match(/\d/)) seen++;
+                    if(seen >= digitsAfterDecimal){ pos = i+1; break; }
+                }
+                // if digitsAfterDecimal is 0 and user was just after dot, place right after dot
+                if(digitsAfterDecimal === 0) pos = dotPos + 1;
+                if(pos > v.length) pos = v.length;
+                el.setSelectionRange(pos,pos);
+                return;
+            }
+        }
+
+        function formatInput(el){
+            try{
+                var raw = el.value || '';
+                var caret = el.selectionStart || 0;
+                var dotIndex = raw.indexOf('.');
+                var wasAfterDecimal = dotIndex >= 0 && caret > dotIndex;
+                var left = raw.slice(0, caret);
+                var digitsBeforeCaret = (left.split('.')[0].match(/\d/g)||[]).length;
+                var digitsAfterDecimal = 0;
+                if(wasAfterDecimal){
+                    var after = left.indexOf('.') >=0 ? left.slice(left.indexOf('.')+1) : '';
+                    digitsAfterDecimal = (after.match(/\d/g)||[]).length;
+                }
+                var stripped = raw.replace(/,/g,'');
+                var newVal = formatNumberString(stripped);
+                el.value = newVal;
+                // set caret based on digit counts
+                setCaretByDigitCount(el, digitsBeforeCaret, digitsAfterDecimal, wasAfterDecimal);
+            }catch(e){
+                // ignore
+            }
+        }
+
+        $(function(){
+            $('#manage-project').on('input', '[name="amount"], #contract_cost', function(e){
+                formatInput(this);
+            });
+
+            // Strip commas before actual submit (the ajax submit handler will be triggered afterwards)
+            $('#manage-project').on('submit', function(){
+                $('[name="amount"], #contract_cost').each(function(){
+                    var $t = $(this);
+                    if(typeof $t.val === 'function'){
+                        $t.val(($t.val()||'').replace(/,/g,''));
+                    }
+                });
+            });
+        });
+    })();
+    // --- End: Improved thousand-separator formatting ---
 </script>

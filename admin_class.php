@@ -251,7 +251,6 @@ Class Action
         $required_missing = array();
         if (!isset($pr_no) || trim($pr_no) === '') $required_missing[] = 'PR No.';
         if (!isset($particulars) || trim($particulars) === '') $required_missing[] = 'Particulars';
-        if (!isset($status) || trim($status) === '') $required_missing[] = 'Status';
         if (!isset($start_date) || trim($start_date) === '' || $start_date === '0000-00-00') $required_missing[] = 'Start Date';
         if (count($required_missing) > 0) {
             return 'Please fill required fields: ' . implode(', ', $required_missing);

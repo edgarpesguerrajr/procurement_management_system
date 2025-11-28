@@ -59,7 +59,13 @@
                         <th><?php echo $row['pr_no'] ?></th>
                         <td>
                             <p><b><?php echo ucwords($row['particulars']) ?></b></p>
-                            <p class="truncate"><?php echo strip_tags($desc) ?></p>
+                            <?php $supplier_text = trim(strip_tags($desc)); ?>
+                            <p class="truncate">
+                                <?php echo $supplier_text; ?>
+                                <?php if(isset($row['contract_cost']) && is_numeric($row['contract_cost']) && floatval($row['contract_cost']) > 0): ?>
+                                    - Php <?php echo number_format($row['contract_cost'], 2); ?>
+                                <?php endif; ?>
+                            </p>
                         </td>
                         <td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
                         <td class="text-left">
