@@ -25,3 +25,36 @@ RFQ
 - in the PHILGEPS posting, update the hidden effect
 - only require the RFQ no. when without posting
 - require all field when with posting
+
+
+received_bac_first
+received_bac_second
+received_bac_third
+
+
+received_gso_first
+received_gso_second
+
+received_bo - rename
+
+new
+received_bo_second
+
+received_accounting_first
+received_accounting_second
+
+received_treasury_first
+received_treasury_second
+received_treasury_third
+received_treasury_fourth
+
+received_mo
+received_admin
+
+cheque_no
+
+
+
+
+
+

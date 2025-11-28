@@ -223,18 +223,38 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                         </div>
                     </div>
 
+
                     <div class="row border-top pt-3">
+                        <div class="col-sm-12">
+                            <b>For Annual Inspection Report</b>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
                         <div class="col-md-3">
                             <dl>
-                                <dt><b class="border-bottom border-primary">AIR No</b></dt>
+                                <dt><b class="border-bottom border-primary">AIR No.</b></dt>
                                 <dd><?php echo (!empty(trim($air_no))) ? htmlspecialchars($air_no, ENT_QUOTES) : 'No Data Available'; ?></dd>
                             </dl>
                         </div>
 
                         <div class="col-sm-3">
                             <dl>
-                                <dt><b class="border-bottom border-primary">Air Date</b></dt>
+                                <dt><b class="border-bottom border-primary">Air Date (GSO)</b></dt>
                                 <dd><?php echo (!empty($air_date) && strpos($air_date,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($air_date)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Treasury</b></dt>
+                                <dd><?php echo (!empty($received_treasury_first) && strpos($received_treasury_first,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_treasury_first)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by BO</b></dt>
+                                <dd><?php echo (!empty($received_bo_first) && strpos($received_bo_first,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_bo_first)) : 'No Specified Date'; ?></dd>
                             </dl>
                         </div>
                     </div>
@@ -249,7 +269,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                         <div class="col-sm-3">
                             <dl>
                                 <dt><b class="border-bottom border-primary">Received by BO</b></dt>
-                                <dd><?php echo (!empty($received_bo) && strpos($received_bo,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_bo)) : 'No Specified Date'; ?></dd>
+                                <dd><?php echo (!empty($received_bo_second) && strpos($received_bo_second,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_bo_second)) : 'No Specified Date'; ?></dd>
                             </dl>
                         </div>
 
@@ -257,6 +277,70 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                             <dl>
                                 <dt><b class="border-bottom border-primary">Return to GSO for completion of Docs</b></dt>
                                 <dd><?php echo (!empty($return_gso_completion) && strpos($return_gso_completion,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($return_gso_completion)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="row border-top pt-3">
+                        <div class="col-sm-12">
+                            <b>For Disbursement</b>
+                        </div>
+                    </div>
+
+                    <div class="row pt-3">
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Accounting</b></dt>
+                                <dd><?php echo (!empty($received_accounting_first) && strpos($received_accounting_first,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_accounting_first)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Admin</b></dt>
+                                <dd><?php echo (!empty($received_admin) && strpos($received_admin,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_admin)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Treasury (voucher)</b></dt>
+                                <dd><?php echo (!empty($received_treasury_second) && strpos($received_treasury_second,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_treasury_second)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Accounting (advice)</b></dt>
+                                <dd><?php echo (!empty($received_accounting_second) && strpos($received_accounting_second,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_accounting_second)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by MO</b></dt>
+                                <dd><?php echo (!empty($received_mo) && strpos($received_mo,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_mo)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Treasury (release)</b></dt>
+                                <dd><?php echo (!empty($received_treasury_fourth) && strpos($received_treasury_fourth,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_treasury_fourth)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Received by Treasury (cheque)</b></dt>
+                                <dd><?php echo (!empty($received_treasury_third) && strpos($received_treasury_third,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($received_treasury_third)) : 'No Specified Date'; ?></dd>
+                            </dl>
+                            <dl>
+                                <dt><b class="border-bottom border-primary">Cheque No.</b></dt>
+                                <dd>
+                                    <?php
+                                        if(!empty(trim($cheque_no))){
+                                            $paid_state = 'Unpaid';
+                                            if(isset($paid) && in_array(strtolower((string)$paid), array('1','yes','true'))){
+                                                $paid_state = 'Paid';
+                                            }
+                                            echo htmlspecialchars($cheque_no, ENT_QUOTES) . ' - ' . $paid_state;
+                                        } else {
+                                            echo 'No Data Available';
+                                        }
+                                    ?>
+                                </dd>
                             </dl>
                         </div>
                     </div>

@@ -40,15 +40,6 @@ if(!function_exists('safeFormatDatetime')){
                 </div>
                 <!--------------------- ROW 1 --------------------->
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="control-label">Particulars</label>
-                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars" value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
-                        </div>
-                    </div>
-                </div>
-                <!--------------------- ROW 2 --------------------->
-                <div class="row pb-3">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="control-label">PR No.</label>
@@ -88,6 +79,15 @@ if(!function_exists('safeFormatDatetime')){
                             </select>
                         </div>
                     </div> -->
+                </div>
+                <!--------------------- ROW 2 --------------------->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Particulars</label>
+                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars" value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
+                        </div>
+                    </div>
                 </div>
                 <!--------------------- ROW 3 --------------------->
                 <div class="row border-top pt-3">
@@ -370,11 +370,11 @@ if(!function_exists('safeFormatDatetime')){
                         <div class="form-group">
                             <label for="air_no" class="control-label">AIR no.</label>
                             <input type="text"
-                                   id="air_no"
-                                   name="air_no"
-                                   class="form-control form-control-sm"
-                                   autocomplete="off"
-                                   value="<?= htmlspecialchars($air_no ?? '', ENT_QUOTES) ?>">
+                                    id="air_no"
+                                    name="air_no"
+                                    class="form-control form-control-sm"
+                                    autocomplete="off"
+                                    value="<?= htmlspecialchars($air_no ?? '', ENT_QUOTES) ?>">
                         </div>
                     </div>
 
@@ -383,23 +383,6 @@ if(!function_exists('safeFormatDatetime')){
                                 <label for="air_date" class="control-label">AIR Date (GSO)</label>
                                 <input type="text"
                                 id="air_date"
-                                   name="air_date"
-                                class="form-control form-control-sm datetimepicker"
-                                   autocomplete="off"
-                                value="<?= safeFormatDatetime($air_date ?? '') ?>">
-                                <div class="ml-2">
-                                    <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="air_date_now" data-target="air_date" <?php if(isset($air_date) && $air_date !== '' && strpos($air_date,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="air_date_now">Received</label>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="air_date" class="control-label">Received by Treasury</label>
-                                <input type="text"
-                                id="air_date"
                                 name="air_date"
                                 class="form-control form-control-sm datetimepicker"
                                 autocomplete="off"
@@ -414,17 +397,34 @@ if(!function_exists('safeFormatDatetime')){
                     </div>
                     <div class="col-md-3">
                             <div class="form-group">
-                                <label for="air_date" class="control-label">Received by BO</label>
+                                <label for="received_treasury_first" class="control-label">Received by Treasury</label>
                                 <input type="text"
-                                id="air_date"
-                                name="air_date"
+                                id="received_treasury_first"
+                                name="received_treasury_first"
                                 class="form-control form-control-sm datetimepicker"
                                 autocomplete="off"
-                                value="<?= safeFormatDatetime($air_date ?? '') ?>">
+                                value="<?= safeFormatDatetime($received_treasury_first ?? '') ?>">
                                 <div class="ml-2">
                                     <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="air_date_now" data-target="air_date" <?php if(isset($air_date) && $air_date !== '' && strpos($air_date,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="air_date_now">Received</label>
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_treasury_first_now" data-target="received_treasury_first" <?php if(isset($received_treasury_first) && $received_treasury_first !== '' && strpos($received_treasury_first,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_treasury_first_now">Received</label>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="received_bo_first" class="control-label">Received by BO</label>
+                                <input type="text"
+                                    id="received_bo_first"
+                                    name="received_bo_first"
+                                    class="form-control form-control-sm datetimepicker"
+                                    autocomplete="off"
+                                    value="<?= safeFormatDatetime($received_bo_first ?? '') ?>">
+                                <div class="ml-2">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_bo_first_now" data-target="received_bo_first" <?php if(isset($received_bo_first) && $received_bo_first !== '' && strpos($received_bo_first,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_bo_first_now">Received</label>
                                     </div>
                                 </div>
                         </div>
@@ -440,17 +440,17 @@ if(!function_exists('safeFormatDatetime')){
                 <div class="row pt-3">
                     <div class="col-md-6">
                             <div class="form-group">
-                                <label for="received_bo" class="control-label">Received by BO</label>
+                                <label for="received_bo_second" class="control-label">Received by BO</label>
                                 <input type="text"
-                                    id="received_bo"
-                                    name="received_bo"
+                                    id="received_bo_second"
+                                    name="received_bo_second"
                                     class="form-control form-control-sm datetimepicker"
                                     autocomplete="off"
-                                    value="<?= safeFormatDatetime($received_bo ?? '') ?>">
+                                    value="<?= safeFormatDatetime($received_bo_second ?? '') ?>">
                                 <div class="ml-2">
                                     <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_bo_now" data-target="received_bo" <?php if(isset($received_bo) && $received_bo !== '' && strpos($received_bo,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="received_bo_now">Received</label>
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_bo_second_now" data-target="received_bo_second" <?php if(isset($received_bo_second) && $received_bo_second !== '' && strpos($received_bo_second,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_bo_second_now">Received</label>
                                     </div>
                                 </div>
                         </div>
@@ -478,61 +478,153 @@ if(!function_exists('safeFormatDatetime')){
                 <!--------------------- ROW 9 --------------------->
                 <div class="row border-top pt-3">
                     <div class="col-sm-12">
-                        <b class="border-bottom border-primary">For Voucher, Cheque, and Advice</b>
+                        <b class="border-bottom border-primary">For Disbursement</b>
                     </div>
                 </div>
                 <div class="row pt-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                             <div class="form-group">
-                                <label for="received_bo" class="control-label">Received by Accounting</label>
+                                <label for="received_accounting_first" class="control-label">Received by Accounting</label>
                                 <input type="text"
-                                   id="received_bo"
-                                   name="received_bo"
+                                   id="received_accounting_first"
+                                   name="received_accounting_first"
                                    class="form-control form-control-sm datetimepicker"
                                    autocomplete="off"
-                                   value="<?= safeFormatDatetime($received_bo ?? '') ?>">
+                                   value="<?= safeFormatDatetime($received_accounting_first ?? '') ?>">
                                 <div class="ml-2">
                                     <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_bo_now" data-target="received_bo" <?php if(isset($received_bo) && $received_bo !== '' && strpos($received_bo,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="received_bo_now">Received</label>
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_accounting_first_now" data-target="received_accounting_first" <?php if(isset($received_accounting_first) && $received_accounting_first !== '' && strpos($received_accounting_first,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_accounting_first_now">Received</label>
                                     </div>
                                 </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                             <div class="form-group">
-                                <label for="return_gso_completion" class="control-label">Received by BO</label>
+                                <label for="received_treasury_second" class="control-label">Received by Treasury (voucher)</label>
                                 <input type="text"
-                                   id="return_gso_completion"
-                                   name="return_gso_completion"
+                                   id="received_treasury_second"
+                                   name="received_treasury_second"
                                    class="form-control form-control-sm datetimepicker"
                                    autocomplete="off"
-                                   value="<?= safeFormatDatetime($return_gso_completion ?? '') ?>">
+                                   value="<?= safeFormatDatetime($received_treasury_second ?? '') ?>">
                                 <div class="ml-2">
                                     <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="return_gso_completion_now" data-target="return_gso_completion" <?php if(isset($return_gso_completion) && $return_gso_completion !== '' && strpos($return_gso_completion,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="return_gso_completion_now">Received</label>
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_treasury_second_now" data-target="received_treasury_second" <?php if(isset($received_treasury_second) && $received_treasury_second !== '' && strpos($received_treasury_second,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_treasury_second_now">Received</label>
                                     </div>
                                 </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                             <div class="form-group">
-                                <label for="return_gso_completion" class="control-label">Received by Treasury</label>
+                                <label for="received_mo" class="control-label">Received by MO</label>
                                 <input type="text"
-                                   id="return_gso_completion"
-                                   name="return_gso_completion"
-                                   class="form-control form-control-sm datetimepicker"
-                                   autocomplete="off"
-                                   value="<?= safeFormatDatetime($return_gso_completion ?? '') ?>">
+                                    id="received_mo"
+                                    name="received_mo"
+                                    class="form-control form-control-sm datetimepicker"
+                                    autocomplete="off"
+                                    value="<?= safeFormatDatetime($received_mo ?? '') ?>">
                                 <div class="ml-2">
                                     <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="return_gso_completion_now" data-target="return_gso_completion" <?php if(isset($return_gso_completion) && $return_gso_completion !== '' && strpos($return_gso_completion,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="return_gso_completion_now">Received</label>
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_mo_now" data-target="received_mo" <?php if(isset($received_mo) && $received_mo !== '' && strpos($received_mo,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_mo_now">Received</label>
                                     </div>
                                 </div>
+                            </div>
+                    </div>
+
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="received_treasury_third" class="control-label">Received by Treasury (cheque)</label>
+                                <input type="text"
+                                    id="received_treasury_third"
+                                    name="received_treasury_third"
+                                    class="form-control form-control-sm datetimepicker"
+                                    autocomplete="off"
+                                    value="<?= safeFormatDatetime($received_treasury_third ?? '') ?>">
+                                <div class="ml-2">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_treasury_third_now" data-target="received_treasury_third" <?php if(isset($received_treasury_third) && $received_treasury_third !== '' && strpos($received_treasury_third,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_treasury_third_now">Received</label>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="row pt-3">
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="received_admin" class="control-label">Received by Admin</label>
+                                <input type="text"
+                                   id="received_admin"
+                                   name="received_admin"
+                                   class="form-control form-control-sm datetimepicker"
+                                   autocomplete="off"
+                                   value="<?= safeFormatDatetime($received_admin ?? '') ?>">
+                                <div class="ml-2">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_admin_now" data-target="received_admin" <?php if(isset($received_admin) && $received_admin !== '' && strpos($received_admin,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_admin_now">Received</label>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="received_accounting_second" class="control-label">Received by Accounting (advice)</label>
+                                <input type="text"
+                                   id="received_accounting_second"
+                                   name="received_accounting_second"
+                                   class="form-control form-control-sm datetimepicker"
+                                   autocomplete="off"
+                                   value="<?= safeFormatDatetime($received_accounting_second ?? '') ?>">
+                                <div class="ml-2">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_accounting_second_now" data-target="received_accounting_second" <?php if(isset($received_accounting_second) && $received_accounting_second !== '' && strpos($received_accounting_second,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_accounting_second_now">Received</label>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="received_treasury_fourth" class="control-label">Received by Treasury (release)</label>
+                                <input type="text"
+                                    id="received_treasury_fourth"
+                                    name="received_treasury_fourth"
+                                    class="form-control form-control-sm datetimepicker"
+                                    autocomplete="off"
+                                    value="<?= safeFormatDatetime($received_treasury_fourth ?? '') ?>">
+                                <div class="ml-2">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input auto-timestamp" type="checkbox" id="received_treasury_fourth_now" data-target="received_treasury_fourth" <?php if(isset($received_treasury_fourth) && $received_treasury_fourth !== '' && strpos($received_treasury_fourth,'0000-00-00') === false) echo 'checked disabled'; ?>>
+                                        <label class="form-check-label small" for="received_treasury_fourth_now">Received</label>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="cheque_no" class="control-label">Cheque no.</label>
+                            <input type="text"
+                                    id="cheque_no"
+                                    name="cheque_no"
+                                    class="form-control form-control-sm"
+                                    autocomplete="off"
+                                    value="<?= htmlspecialchars($cheque_no ?? '', ENT_QUOTES) ?>">
+                            <div class="form-check">
+                                <!-- Always submit a default 'no' value when checkbox is unchecked -->
+                                <input type="hidden" name="paid" value="no">
+                                <input class="form-check-input" type="checkbox" id="paid" name="paid" value="yes" <?php if(isset($paid) && ($paid == 1 || $paid === '1' || strtolower($paid) === 'yes')) echo 'checked'; ?>>
+                                <label class="form-check-label small" for="paid">Paid</label>
+                            </div>
                         </div>
                     </div>
                 </div>

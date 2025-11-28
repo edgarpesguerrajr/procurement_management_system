@@ -278,14 +278,29 @@ Class Action
         }
         // Insert or update and return the record id on success
         if (empty($id)) {
-            $save = $this->db->query("INSERT INTO project_list set $data");
+            $query = "INSERT INTO project_list set $data";
+            try {
+                $save = $this->db->query($query);
+            } catch (Exception $e) {
+                return 'DB Error: ' . $e->getMessage() . ' -- Query: ' . $query;
+            }
             if ($save) {
                 return $this->db->insert_id;
+            } else {
+                return 'DB Error: ' . $this->db->error . ' -- Query: ' . $query;
             }
         } else {
-            $save = $this->db->query("UPDATE project_list set $data where id = $id");
+            $id = intval($id);
+            $query = "UPDATE project_list set $data where id = $id";
+            try {
+                $save = $this->db->query($query);
+            } catch (Exception $e) {
+                return 'DB Error: ' . $e->getMessage() . ' -- Query: ' . $query;
+            }
             if ($save) {
                 return intval($id);
+            } else {
+                return 'DB Error: ' . $this->db->error . ' -- Query: ' . $query;
             }
         }
         return 0;
