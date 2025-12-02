@@ -1,7 +1,7 @@
 Amount and Contract Cost - done
 - make the separator visible when typing
 
-Specify the office
+Specify the office - done
 - what office did the document come from before receiving 
 
 Mode of Procurement
@@ -21,7 +21,7 @@ Contract Cost - done
 - instead of supplier only, add the contract cost on the document list page
 - ex. ASUS - Php 30,500.00
 
-RFQ
+RFQ - done
 - in the PHILGEPS posting, update the hidden effect
 - only require the RFQ no. when without posting
 - require all field when with posting
@@ -52,3 +52,32 @@ received_mo
 received_admin
 
 cheque_no
+
+
+
+
+single
+Type of Procurement
+PR no.
+Amount
+particulars
+Mode of Procurement
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

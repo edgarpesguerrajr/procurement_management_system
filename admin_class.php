@@ -302,9 +302,14 @@ Class Action
         $data = "";
         foreach ($_POST as $k => $v) {
             if (!in_array($k, array('id', 'user_ids')) && !is_numeric($k)) {
-                // If the POST value is an array (e.g. pr_no[], amount[], etc.),
-                // encode it as JSON so it can be safely stored in a text field
-                // for legacy columns. Consolidated rows are stored separately.
+                // Skip per-row consolidated arrays so they are not included as
+                // columns in the `project_list` INSERT/UPDATE (project_list
+                // doesn't have `particular` or array columns for consolidated rows).
+                if (is_array($v) && in_array($k, array('pr_no', 'amount', 'particular', 'particulars'))) {
+                    continue;
+                }
+                // If the POST value is an array (for other legacy usages),
+                // encode it as JSON so it can be safely stored in a text field.
                 if (is_array($v)) {
                     $v = json_encode($v);
                 }
@@ -325,6 +330,105 @@ Class Action
         }
         if (isset($user_ids)) {
             $data .= ", user_ids='" . implode(',', $user_ids) . "' ";
+        }
+        // Ensure top-level `particulars` is present in the project_list data.
+        // Some form payload shapes previously caused this key to be omitted
+        // when building $data; if missing, explicitly append it using the
+        // scalar $particulars or $_POST value (prefer scalar string). Append
+        // even when it's an empty string so the parent `project_list.particulars`
+        // always reflects the top-level Document field.
+        if (!preg_match('/\bparticulars\s*=\s*/i', $data)) {
+            if (isset($_POST['particulars']) && !is_array($_POST['particulars'])) {
+                $pval = $_POST['particulars'];
+            } elseif (isset($particulars) && is_scalar($particulars)) {
+                $pval = $particulars;
+            } else {
+                $pval = null;
+            }
+            if ($pval !== null) {
+                if (empty($data)) {
+                    $data = " particulars='" . $this->db->real_escape_string((string)$pval) . "' ";
+                } else {
+                    $data .= ", particulars='" . $this->db->real_escape_string((string)$pval) . "' ";
+                }
+            }
+        }
+
+        // Ensure top-level `pr_no` is present in the project_list data for Single
+        // procurements. Per-row `pr_no[]` are skipped earlier and handled by
+        // syncConsolidatedRows(). Here we will coerce/append a scalar `pr_no`
+        // (or explicit NULL) depending on procurement type below.
+
+        // At this point we've built the generic $data from POST. Now enforce
+        // procurement-type-specific parent-field behavior required by the
+        // specification:
+        // - Single: `pr_no` = top-level PR No. (or NULL), `amount` = top-level Amount (or NULL), `particulars` = Document
+        // - Consolidated: `pr_no` = NULL, `amount` = grand total (set by sync), `particulars` = Document
+        $ptype = isset($_POST['procurement_type']) ? strtolower(trim((string)$_POST['procurement_type'])) : '';
+
+        // Helper to append clause to $data properly (handles empty $data)
+        $append = function(&$d, $clause) {
+            if (empty($d)) {
+                $d = " $clause ";
+            } else {
+                $d .= ", $clause ";
+            }
+        };
+
+        if ($ptype === 'consolidated') {
+            // remove any existing pr_no / amount assignments to avoid duplicates
+            $data = preg_replace("/\,?\s*pr_no\s*=\s*'[^']*'\s*/i", "", $data);
+            $data = preg_replace("/\,?\s*amount\s*=\s*'[^']*'\s*/i", "", $data);
+            // ensure pr_no is explicit NULL for consolidated
+            $append($data, "pr_no=NULL");
+            // ensure amount is NULL for now; syncConsolidatedRows will set grand total
+            $append($data, "amount=NULL");
+            // ensure particulars uses the top-level Document field
+            $doc = null;
+            if (isset($_POST['particulars']) && !is_array($_POST['particulars'])) {
+                $doc = $_POST['particulars'];
+            } elseif (isset($particulars) && is_scalar($particulars)) {
+                $doc = $particulars;
+            }
+            if ($doc !== null) {
+                $data = preg_replace("/\,?\s*particulars\s*=\s*'[^']*'\s*/i", "", $data);
+                $append($data, "particulars='" . $this->db->real_escape_string((string)$doc) . "'");
+            }
+        } else {
+            // Single (or other): ensure parent fields reflect top-level scalars
+            // PR No
+            $pno = null;
+            if (isset($_POST['pr_no']) && !is_array($_POST['pr_no'])) {
+                $pno = $_POST['pr_no'];
+            } elseif (isset($pr_no) && is_scalar($pr_no)) {
+                $pno = $pr_no;
+            }
+            // remove any existing pr_no clause
+            $data = preg_replace("/\,?\s*pr_no\s*=\s*'[^']*'\s*/i", "", $data);
+            if ($pno !== null && trim((string)$pno) !== '') {
+                $append($data, "pr_no='" . $this->db->real_escape_string((string)$pno) . "'");
+            } else {
+                $append($data, "pr_no=NULL");
+            }
+
+            // Amount: prefer top-level scalar; normalize by stripping commas and formatting
+            $amtVal = null;
+            if (isset($_POST['amount']) && !is_array($_POST['amount'])) {
+                $amtVal = $_POST['amount'];
+            } elseif (isset($amount) && is_scalar($amount)) {
+                $amtVal = $amount;
+            }
+            $data = preg_replace("/\,?\s*amount\s*=\s*'[^']*'\s*/i", "", $data);
+            if ($amtVal !== null) {
+                $amtClean = is_string($amtVal) ? str_replace(',','', trim($amtVal)) : $amtVal;
+                if ($amtClean !== '' && is_numeric($amtClean)) {
+                    $fmt = number_format((float)$amtClean, 2, '.', '');
+                    $append($data, "amount='" . $this->db->real_escape_string($fmt) . "'");
+                } else {
+                    $append($data, "amount=NULL");
+                }
+            }
+            // Ensure particulars uses the top-level Document field (already appended earlier if present)
         }
         // Insert or update and return the record id on success
         if (empty($id)) {
@@ -439,7 +543,19 @@ Class Action
     {
         extract($_POST);
         if (!isset($id) || empty($id)) return 0;
-        $delete = $this->db->query("DELETE FROM comments where id = " . intval($id));
+        $id = intval($id);
+        // fetch comment owner
+        $c = $this->db->query("SELECT user_id FROM comments WHERE id = {$id}");
+        if (!$c || $c->num_rows == 0) return 0;
+        $owner = $c->fetch_assoc();
+        $owner_id = isset($owner['user_id']) ? intval($owner['user_id']) : 0;
+        // If current user is an employee (login_type == 3), allow delete only for own comments
+        if (isset($_SESSION['login_type']) && intval($_SESSION['login_type']) === 2) {
+            if (!isset($_SESSION['login_id']) || intval($_SESSION['login_id']) !== $owner_id) {
+                return 0; // not allowed
+            }
+        }
+        $delete = $this->db->query("DELETE FROM comments where id = {$id}");
         if ($delete) return 1;
         return 0;
     }
@@ -473,7 +589,16 @@ Class Action
 
         $pr_nos = isset($_POST['pr_no']) && is_array($_POST['pr_no']) ? $_POST['pr_no'] : array();
         $amounts = isset($_POST['amount']) && is_array($_POST['amount']) ? $_POST['amount'] : array();
-        $parts = isset($_POST['particulars']) && is_array($_POST['particulars']) ? $_POST['particulars'] : array();
+        // Per-row particulars are posted as `particular[]` (singular) to avoid
+        // colliding with the top-level `particulars` field. Accept either name
+        // for compatibility.
+        if (isset($_POST['particular']) && is_array($_POST['particular'])) {
+            $parts = $_POST['particular'];
+        } elseif (isset($_POST['particulars']) && is_array($_POST['particulars'])) {
+            $parts = $_POST['particulars'];
+        } else {
+            $parts = array();
+        }
 
         $max = max(array(count($pr_nos), count($amounts), count($parts)));
         $rows = array();

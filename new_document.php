@@ -44,18 +44,26 @@ if(!function_exists('safeFormatDatetime')){
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">PR No.</label>
-                                <input type="text" class="form-control form-control-sm" autocomplete="off" name="pr_no" value="<?= htmlspecialchars($pr_no ?? '', ENT_QUOTES) ?>">
+                                <input type="text" 
+                                    class="form-control form-control-sm" 
+                                    autocomplete="off" 
+                                    name="pr_no" 
+                                    value="<?= htmlspecialchars($pr_no ?? '', ENT_QUOTES) ?>">
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Amount</label>
-                                <input type="text" class="form-control form-control-sm amount-input" autocomplete="off" name="amount" value="<?= htmlspecialchars($amount ?? '', ENT_QUOTES) ?>">
+                                <input type="text" 
+                                    class="form-control form-control-sm amount-input" 
+                                    autocomplete="off" 
+                                    name="amount" 
+                                    value="<?= htmlspecialchars($amount ?? '', ENT_QUOTES) ?>">
                             </div>
                         </div>
 
-                            <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="start_date" class="control-label">Start Date</label>
                                 <input type="date"
@@ -72,27 +80,39 @@ if(!function_exists('safeFormatDatetime')){
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="control-label">Particulars</label>
-                                <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars" value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
+                                <input type="text" 
+                                    class="form-control form-control-sm" 
+                                    autocomplete="off" 
+                                    name="particulars" 
+                                    value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!--------------------- CONSOLIDATED --------------------->
-                <!-- Show this block only for 'consolidated' procurement_type -->
                 <div id="consolidated_section" <?= (isset($procurement_type) && $procurement_type === 'consolidated') ? '' : 'style="display:none;"' ?> >
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Document</label>
-                                <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars" value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
+                                <input type="text" 
+                                    class="form-control form-control-sm" 
+                                    autocomplete="off" 
+                                    name="particulars" 
+                                    value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
                             </div>
                         </div>
     
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Grand Total</label>
-                                <input type="text" id="consolidated_grand_total" class="form-control form-control-sm amount-input" autocomplete="off" name="amount" value="<?= htmlspecialchars($amount ?? '', ENT_QUOTES) ?>" readonly>
+                                <input type="text" 
+                                    id="consolidated_grand_total" 
+                                    class="form-control form-control-sm amount-input" 
+                                    autocomplete="off" 
+                                    name="amount" 
+                                    value="<?= htmlspecialchars($amount ?? '', ENT_QUOTES) ?>" readonly>
                             </div>
                         </div>
     
@@ -154,9 +174,15 @@ if(!function_exists('safeFormatDatetime')){
                                             if(is_array($amount)) $amounts = $amount;
                                             elseif($amount !== '') $amounts = [$amount];
                                         }
-                                        if(isset($particular)){
-                                            if(is_array($particular)) $parts = $particular;
-                                            elseif($particular !== '') $parts = [$particular];
+                                        if(isset($particulars)){
+                                            if(is_array($particulars)) $parts = $particulars;
+                                            elseif($particulars !== '') $parts = [$particulars];
+                                        }
+                                        // If per-row inputs were named `particular[]` previously and
+                                        // the request repopulated a `$particular` variable, allow
+                                        // that as a source as well for backward compatibility.
+                                        if(isset($particular) && is_array($particular)){
+                                            $parts = $particular;
                                         }
                                     }
                                 } else {
@@ -190,7 +216,7 @@ if(!function_exists('safeFormatDatetime')){
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group mb-0">
-                                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars[]" placeholder="Particulars" value="<?= htmlspecialchars($parts[$i] ?? '', ENT_QUOTES) ?>">
+                                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="particular[]" placeholder="Particulars" value="<?= htmlspecialchars($parts[$i] ?? '', ENT_QUOTES) ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-1 d-flex align-items-center justify-content-center">
@@ -764,11 +790,18 @@ if(!function_exists('safeFormatDatetime')){
                             $('#consolidated_section').show();
                             $('#consolidated_preview').show();
                             $('#single_section').hide();
+                            // Enable inputs inside consolidated section so they are submitted
+                            $('#consolidated_section').find('input,select,textarea').prop('disabled', false);
+                            // Disable inputs inside single section to avoid duplicate field names
+                            $('#single_section').find('input,select,textarea').prop('disabled', true);
                         } else {
                             // For 'single' and for empty/no selection, show single by default
                             $('#single_section').show();
                             $('#consolidated_section').hide();
                             $('#consolidated_preview').hide();
+                            // Enable single inputs and disable consolidated inputs to avoid duplicate names
+                            $('#single_section').find('input,select,textarea').prop('disabled', false);
+                            $('#consolidated_section').find('input,select,textarea').prop('disabled', true);
                         }
                     }
 

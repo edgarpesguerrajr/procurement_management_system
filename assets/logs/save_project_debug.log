@@ -1,0 +1,234 @@
+[2025-12-02 10:36:49] POST=Array
+(
+    [id] => 35
+    [procurement_type] => single
+    [amount] => 1.00
+    [start_date] => 
+    [particulars] => sample title
+    [particular] => Array
+        (
+            [0] => sample title
+        )
+
+    [mop] => 
+    [received_bac_first] => 
+    [received_gso_first] => 
+    [philgeps_posting] => 
+    [rfq_no] => 
+    [supplier] => 
+    [contract_cost] => 0.00
+    [received_bac_second] => 
+    [bac_reso_no] => 
+    [bac_reso_date] => 
+    [received_gso_second] => 
+    [po_no] => 
+    [po_date] => 
+    [air_no] => 
+    [air_date] => 
+    [received_treasury_first] => 
+    [received_bo_first] => 
+    [received_bo_second] => 
+    [return_gso_completion] => 
+    [received_accounting_first] => 
+    [received_treasury_second] => 
+    [received_mo] => 
+    [received_treasury_third] => 
+    [received_admin] => 
+    [received_accounting_second] => 
+    [received_treasury_fourth] => 
+    [cheque_no] => 
+    [paid] => no
+)
+
+DATA= procurement_type='single' , amount='1.00' , start_date='' , particulars='sample title' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no' 
+[2025-12-02 10:36:49] QUERY_BEFORE_UPDATE=UPDATE project_list set  procurement_type='single' , amount='1.00' , start_date='' , particulars='sample title' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no'  where id = 35
+[2025-12-02 10:36:49] UPDATE_SUCCESS id=35
+[2025-12-02 10:37:04] POST=Array
+(
+    [id] => 35
+    [procurement_type] => single
+    [amount] => 1.00
+    [start_date] => 
+    [particulars] => sample title
+    [particular] => Array
+        (
+            [0] => sample title
+        )
+
+    [mop] => 
+    [received_bac_first] => 
+    [received_gso_first] => 
+    [philgeps_posting] => 
+    [rfq_no] => 
+    [supplier] => 
+    [contract_cost] => 0.00
+    [received_bac_second] => 
+    [bac_reso_no] => 
+    [bac_reso_date] => 
+    [received_gso_second] => 
+    [po_no] => 
+    [po_date] => 
+    [air_no] => 
+    [air_date] => 
+    [received_treasury_first] => 
+    [received_bo_first] => 
+    [received_bo_second] => 
+    [return_gso_completion] => 
+    [received_accounting_first] => 
+    [received_treasury_second] => 
+    [received_mo] => 
+    [received_treasury_third] => 
+    [received_admin] => 
+    [received_accounting_second] => 
+    [received_treasury_fourth] => 
+    [cheque_no] => 
+    [paid] => no
+)
+
+DATA= procurement_type='single' , amount='1.00' , start_date='' , particulars='sample title' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no' 
+[2025-12-02 10:37:04] QUERY_BEFORE_UPDATE=UPDATE project_list set  procurement_type='single' , amount='1.00' , start_date='' , particulars='sample title' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no'  where id = 35
+[2025-12-02 10:37:04] UPDATE_SUCCESS id=35
+[2025-12-02 10:37:16] POST=Array
+(
+    [id] => 35
+    [procurement_type] => consolidated
+    [pr_no] => Array
+        (
+            [0] => 
+        )
+
+    [amount] => Array
+        (
+            [0] => 1.00
+        )
+
+    [start_date] => 
+    [particulars] => title ng single
+    [particular] => Array
+        (
+            [0] => sample title
+        )
+
+    [mop] => 
+    [received_bac_first] => 
+    [received_gso_first] => 
+    [philgeps_posting] => 
+    [rfq_no] => 
+    [supplier] => 
+    [contract_cost] => 0.00
+    [received_bac_second] => 
+    [bac_reso_no] => 
+    [bac_reso_date] => 
+    [received_gso_second] => 
+    [po_no] => 
+    [po_date] => 
+    [air_no] => 
+    [air_date] => 
+    [received_treasury_first] => 
+    [received_bo_first] => 
+    [received_bo_second] => 
+    [return_gso_completion] => 
+    [received_accounting_first] => 
+    [received_treasury_second] => 
+    [received_mo] => 
+    [received_treasury_third] => 
+    [received_admin] => 
+    [received_accounting_second] => 
+    [received_treasury_fourth] => 
+    [cheque_no] => 
+    [paid] => no
+)
+
+DATA= procurement_type='consolidated' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no' 
+[2025-12-02 10:37:16] QUERY_BEFORE_UPDATE=UPDATE project_list set  procurement_type='consolidated' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no'  where id = 35
+[2025-12-02 10:37:16] UPDATE_SUCCESS id=35
+[2025-12-02 10:37:37] POST=Array
+(
+    [id] => 35
+    [procurement_type] => single
+    [amount] => 1.00
+    [start_date] => 
+    [particulars] => title ng single
+    [particular] => Array
+        (
+            [0] => sample title
+        )
+
+    [mop] => 
+    [received_bac_first] => 
+    [received_gso_first] => 
+    [philgeps_posting] => 
+    [rfq_no] => 
+    [supplier] => 
+    [contract_cost] => 0.00
+    [received_bac_second] => 
+    [bac_reso_no] => 
+    [bac_reso_date] => 
+    [received_gso_second] => 
+    [po_no] => 
+    [po_date] => 
+    [air_no] => 
+    [air_date] => 
+    [received_treasury_first] => 
+    [received_bo_first] => 
+    [received_bo_second] => 
+    [return_gso_completion] => 
+    [received_accounting_first] => 
+    [received_treasury_second] => 
+    [received_mo] => 
+    [received_treasury_third] => 
+    [received_admin] => 
+    [received_accounting_second] => 
+    [received_treasury_fourth] => 
+    [cheque_no] => 
+    [paid] => no
+)
+
+DATA= procurement_type='single' , amount='1.00' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no' 
+[2025-12-02 10:37:37] QUERY_BEFORE_UPDATE=UPDATE project_list set  procurement_type='single' , amount='1.00' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no'  where id = 35
+[2025-12-02 10:37:37] UPDATE_SUCCESS id=35
+[2025-12-02 10:37:53] POST=Array
+(
+    [id] => 35
+    [procurement_type] => single
+    [amount] => 1.00
+    [start_date] => 
+    [particulars] => title ng single
+    [particular] => Array
+        (
+            [0] => title ng single
+        )
+
+    [mop] => 
+    [received_bac_first] => 
+    [received_gso_first] => 
+    [philgeps_posting] => 
+    [rfq_no] => 
+    [supplier] => 
+    [contract_cost] => 0.00
+    [received_bac_second] => 
+    [bac_reso_no] => 
+    [bac_reso_date] => 
+    [received_gso_second] => 
+    [po_no] => 
+    [po_date] => 
+    [air_no] => 
+    [air_date] => 
+    [received_treasury_first] => 
+    [received_bo_first] => 
+    [received_bo_second] => 
+    [return_gso_completion] => 
+    [received_accounting_first] => 
+    [received_treasury_second] => 
+    [received_mo] => 
+    [received_treasury_third] => 
+    [received_admin] => 
+    [received_accounting_second] => 
+    [received_treasury_fourth] => 
+    [cheque_no] => 
+    [paid] => no
+)
+
+DATA= procurement_type='single' , amount='1.00' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no' 
+[2025-12-02 10:37:53] QUERY_BEFORE_UPDATE=UPDATE project_list set  procurement_type='single' , amount='1.00' , start_date='' , particulars='title ng single' , mop='' , received_bac_first='' , received_gso_first='' , philgeps_posting='' , rfq_no='' , supplier='' , contract_cost='0.00' , received_bac_second='' , bac_reso_no='' , bac_reso_date='' , received_gso_second='' , po_no='' , po_date='' , air_no='' , air_date='' , received_treasury_first='' , received_bo_first='' , received_bo_second='' , return_gso_completion='' , received_accounting_first='' , received_treasury_second='' , received_mo='' , received_treasury_third='' , received_admin='' , received_accounting_second='' , received_treasury_fourth='' , cheque_no='' , paid='no'  where id = 35
+[2025-12-02 10:37:53] UPDATE_SUCCESS id=35

@@ -5,6 +5,35 @@ $qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch
 foreach($qry as $k => $v){
     $$k = $v;
 }
+// Determine which PR No to display: for consolidated procurements use the
+// joined PR Nos from the `consolidated` table; otherwise use the parent
+// `project_list.pr_no` value.
+// Prepare display columns: left column for PR No, right column for Particular (per-row)
+$display_pr_col = '';
+$display_part_col = '';
+if (isset($procurement_type) && strtolower(trim($procurement_type)) === 'consolidated') {
+    $pid = intval($_GET['id']);
+    $pr_items = [];
+    $part_items = [];
+    $cres = $conn->query("SELECT pr_no, particular FROM consolidated WHERE project_id = {$pid} ORDER BY COALESCE(row_order,id) ASC");
+    if ($cres && $cres->num_rows > 0) {
+        while ($r = $cres->fetch_assoc()) {
+            $pr = isset($r['pr_no']) ? trim((string)$r['pr_no']) : '';
+            $part = isset($r['particular']) ? trim((string)$r['particular']) : '';
+            if ($pr !== '') {
+                $pr_items[] = htmlspecialchars($pr, ENT_QUOTES);
+                $part_items[] = $part !== '' ? htmlspecialchars(ucwords($part), ENT_QUOTES) : '—';
+            }
+        }
+    }
+    // join with HTML line breaks so each PR / particular pair appears aligned across the two columns
+    $display_pr_col = !empty($pr_items) ? implode('<br/>', $pr_items) : '';
+    $display_part_col = !empty($part_items) ? implode('<br/>', $part_items) : '';
+} else {
+    // Single procurement: left shows parent PR, right shows parent particulars
+    $display_pr_col = isset($pr_no) ? htmlspecialchars(trim((string)$pr_no), ENT_QUOTES) : '';
+    $display_part_col = (!empty(trim($particulars))) ? htmlspecialchars(ucwords($particulars), ENT_QUOTES) : '';
+}
 // Ensure progress counters are defined to avoid warnings
 $prod = isset($prod) ? $prod : 0;
 $cprog = isset($cprog) ? $cprog : 0;
@@ -34,14 +63,49 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-sm-10">
-                            <dl>
-                                <dt><b class="border-bottom border-primary">Particulars</b></dt>
-                                <dd><?php echo (!empty(trim($particulars))) ? ucwords($particulars) : 'No Data Available'; ?></dd>
-                                <dt><b class="border-bottom border-primary">Purchase Request No.</b></dt>
-                                <dd><?php echo (!empty(trim($pr_no))) ? html_entity_decode($pr_no) : 'No Data Available'; ?></dd>
-                            </dl>
+                            <div class="row">
+                                <dl>
+                                    <dt><b class="border-bottom border-primary">Particulars</b></dt>
+                                    <dd><?php echo (!empty(trim($particulars))) ? ucwords($particulars) : 'No Data Available'; ?></dd>
+                                    <?php if (isset($procurement_type) && strtolower(trim($procurement_type)) === 'single'): ?>
+                                    <dt><b class="border-bottom border-primary">PR No.</b></dt>
+                                    <dd><?php echo (!empty(trim($pr_no))) ? ucwords($pr_no) : 'No Data Available'; ?></dd>
+                                    <?php endif; ?>
+                                </dl>
+                            </div>
+                            <?php if (isset($procurement_type) && strtolower(trim($procurement_type)) === 'consolidated'): ?>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table id="pr-part-table" class="table table-condensed m-0 table-hover">
+                                        <colgroup>
+                                            <col width="10%">
+                                            <col width="90%">
+                                        </colgroup>
+                                        <thead>
+                                            <th>PR No.</th>
+                                            <th>Particular</th>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $pid = intval($_GET['id']);
+                                            $cres = $conn->query("SELECT pr_no, particular FROM consolidated WHERE project_id = {$pid} ORDER BY COALESCE(row_order,id) ASC");
+                                            if ($cres && $cres->num_rows > 0) {
+                                                while ($r = $cres->fetch_assoc()) {
+                                                    $pr = isset($r['pr_no']) ? htmlspecialchars(trim((string)$r['pr_no']), ENT_QUOTES) : '';
+                                                    $part = isset($r['particular']) ? htmlspecialchars(ucwords(trim((string)$r['particular'])), ENT_QUOTES) : '';
+                                                    echo '<tr><td>' . ($pr !== '' ? $pr : '&ndash;') . '</td><td>' . ($part !== '' ? $part : 'No Data Available') . '</td></tr>';
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="2" class="text-center">No consolidated rows found.</td></tr>';
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
-
+                        
                         <div class="col-md-2">
                             <dl>
                                 <dt><b class="border-bottom border-primary">Status</b></dt>
@@ -361,7 +425,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                    <table id="comments-list" class="table table-condensed m-0 table-hover">
+                        <table id="comments-list" class="table table-condensed m-0 table-hover">
                             <colgroup>
                                 <col width="5%">
                                 <col width="15%">
@@ -378,7 +442,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                             </thead>
                             <tbody>
 
-                        </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -420,6 +484,10 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
             : '';
     }
 
+    // expose current session user info to JS for UI-level permission checks
+    var LOGIN_ID = '<?php echo isset($_SESSION['login_id']) ? $_SESSION['login_id'] : '' ?>';
+    var LOGIN_TYPE = '<?php echo isset($_SESSION['login_type']) ? $_SESSION['login_type'] : '' ?>';
+
     function load_comments() {
         if (typeof start_load === 'function') start_load();
         $.ajax({
@@ -440,11 +508,15 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                                     '<td>' + escapeHtml(el.user || 'Unknown') + '</td>' +
                                     '<td>' + escapeHtml(el.comment || '') + '</td>' +
                                     '<td>' + escapeHtml(el.date_created || '') + '</td>' +
-                                    '<td class="text-center">'
-                                    + '<button type="button" class="btn btn-sm btn-default btn-flat comment-view" data-id="' + el.id + '" data-user="' + escapeHtml(el.user || '') + '" data-comment="' + encodeURIComponent(el.comment || '') + '" title="View"><i class="fa fa-eye"></i></button> '
-                                    + '<button type="button" class="btn btn-sm btn-danger btn-flat comment-delete" data-id="' + el.id + '" title="Delete"><i class="fa fa-trash"></i></button>'
-                                    + '</td>'
-                                    + '</tr>';
+                                    '<td class="text-center">';
+                                // view button always available
+                                tr += '<button type="button" class="btn btn-sm btn-default btn-flat comment-view" data-id="' + el.id + '" data-user="' + escapeHtml(el.user || '') + '" data-comment="' + encodeURIComponent(el.comment || '') + '" title="View"><i class="fa fa-eye"></i></button> ';
+                                // show delete button only if current user is admin (not type 2) OR owns the comment
+                                var canDelete = (LOGIN_TYPE !== '2') || (parseInt(el.user_id) === parseInt(LOGIN_ID));
+                                if (canDelete) {
+                                    tr += '<button type="button" class="btn btn-sm btn-danger btn-flat comment-delete" data-id="' + el.id + '" title="Delete"><i class="fa fa-trash"></i></button>';
+                                }
+                                tr += '</td>' + '</tr>';
                             });
                         } else {
                             tr = '<tr><td colspan="5" class="text-center">No comments found.</td></tr>';

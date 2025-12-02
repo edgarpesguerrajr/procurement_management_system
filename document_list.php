@@ -56,7 +56,27 @@
                         endif;
                     ?>
                     <tr>
-                        <th><?php echo $row['pr_no'] ?></th>
+                        <th>
+                            <?php
+                            // If procurement is consolidated, show all related PR Nos from `consolidated` table
+                            if (isset($row['procurement_type']) && strcasecmp(trim($row['procurement_type']), 'consolidated') === 0) {
+                                $cid = intval($row['id']);
+                                $cres = $conn->query("SELECT pr_no FROM consolidated WHERE project_id = {$cid} ORDER BY COALESCE(row_order,id) ASC");
+                                if ($cres && $cres->num_rows > 0) {
+                                    $prs = array();
+                                    while ($cr = $cres->fetch_assoc()) {
+                                        $p = isset($cr['pr_no']) ? trim((string)$cr['pr_no']) : '';
+                                        if ($p !== '') $prs[] = htmlspecialchars($p, ENT_QUOTES);
+                                    }
+                                    echo !empty($prs) ? implode('<br/>', $prs) : '&ndash;';
+                                } else {
+                                    echo (!empty(trim($row['pr_no']))) ? htmlspecialchars($row['pr_no'], ENT_QUOTES) : '&ndash;';
+                                }
+                            } else {
+                                echo (!empty(trim($row['pr_no']))) ? htmlspecialchars($row['pr_no'], ENT_QUOTES) : '&ndash;';
+                            }
+                            ?>
+                        </th>
                         <td>
                             <p><b><?php echo ucwords($row['particulars']) ?></b></p>
                             <?php $supplier_text = trim(strip_tags($desc)); ?>
