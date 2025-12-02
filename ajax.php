@@ -70,6 +70,10 @@ if($action == 'delete_comment'){
     if($save)
         echo $save;
 }
+if($action == 'mark_notifications_read'){
+    $save = $crud->mark_notifications_read();
+    if($save) echo $save;
+}
 if($action == 'get_report'){
     $get = $crud->get_report();
     if($get)

@@ -179,18 +179,12 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 
                         <div class="col-md-3">
                             <dl>
-                                <dt><b class="border-bottom border-primary">Remarks Purchase Request No.</b></dt>
-                                <dd><?php echo (!empty(trim($remarks_pr_no))) ? htmlspecialchars($remarks_pr_no, ENT_QUOTES) : 'No Data Available'; ?></dd>
-                            </dl>
-
-                            <dl>
                                 <dt><b class="border-bottom border-primary">Contract Cost</b></dt>
                                 <dd><?php echo (!empty($contract_cost) && is_numeric($contract_cost)) ? 'Php '.number_format($contract_cost, 2) : 'No Data Available'; ?></dd>
                             </dl>
                         </div>
                     </div>
 
-                    <?php if (isset($philgeps_posting) && $philgeps_posting === 'With Posting'): ?>
                     <div class="row border-top pt-3">
                         <div class="col-sm-12">
                             <b>WITH POSTING TO PHILGEPS</b>
@@ -227,7 +221,6 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                             </dl>
                         </div>
                     </div>
-                    <?php endif; ?>
 
                     <div class="row border-top pt-3">
                         <div class="col-sm-12">
@@ -253,7 +246,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
                         <div class="col-sm-3">
                             <dl>
                                 <dt><b class="border-bottom border-primary">BAC Resolution Date</b></dt>
-                                <dd><?php echo (!empty($bac_reso_date) && strpos($bac_reso_date,'0000-00-00') === false) ? date("F d, Y, h:i A", strtotime($bac_reso_date)) : 'No Specified Date'; ?></dd>
+                                <dd><?php echo (!empty($bac_reso_date) && strpos($bac_reso_date,'0000-00-00') === false) ? date("F d, Y", strtotime($bac_reso_date)) : 'No Specified Date'; ?></dd>
                             </dl>
                         </div>
                     </div>

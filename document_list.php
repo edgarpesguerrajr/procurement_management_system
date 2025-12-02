@@ -92,22 +92,14 @@
                             <?php
                             // Progress calculation: percent complete = (# of completed input fields) / (total fields)
                             $fields_to_check = array(
-                                'particulars','pr_no','amount','start_date','status','mop',
-                                'received_bac_first','received_gso_first','procurement_type','remarks_pr_no',
-                                'philgeps_posting','received_bac_third','rfq_no','reposting','returned_gso_abstract',
-                                'supplier','contract_cost','received_bac_second','bac_reso_no','bac_reso_date',
-                                'received_gso_second','po_no','po_date','air_no','air_date','received_bo',
-                                'return_gso_completion'
+                                'procurement_type','pr_no','amount','start_date','particulars','mop','received_bac_first',
+                                'received_gso_first','philgeps_posting','rfq_no','returned_gso_abstract','supplier',
+                                'contract_cost','received_bac_second','bac_reso_no','bac_reso_date','received_gso_second',
+                                'po_no','po_date','air_no','received_treasury_first','received_bo_first','received_bo_second',
+                                'return_gso_completion','received_accounting_first','received_treasury_second','received_mo',
+                                'received_treasury_third','received_admin','received_accounting_second','received_treasury_fourth',
+                                'cheque_no'
                             );
-                            // If this document was saved as "Without Posting", exclude PHILGEPS-only fields
-                            if (isset($row['philgeps_posting']) && strcasecmp(trim($row['philgeps_posting']), 'Without Posting') === 0) {
-                                $exclude = array('received_bac_third','rfq_no','reposting','returned_gso_abstract');
-                                $fields_to_check = array_values(array_diff($fields_to_check, $exclude));
-                            }
-                            // If procurement type is 'single' exclude remarks_pr_no from the calculation
-                            if (isset($row['procurement_type']) && strcasecmp(trim($row['procurement_type']), 'single') === 0) {
-                                $fields_to_check = array_values(array_diff($fields_to_check, array('remarks_pr_no')));
-                            }
                             $total_fields = count($fields_to_check);
                             $filled = 0;
                             foreach($fields_to_check as $f){
@@ -116,6 +108,17 @@
                                 // treat values containing SQL zero-dates as empty
                                 if($val !== '' && strpos($val,'0000-00-00') === false){
                                     $filled++;
+                                    continue;
+                                }
+                                // Special-case: if field is pr_no and this project is a consolidated
+                                // procurement, consider it 'filled' when consolidated child rows exist
+                                if ($f === 'pr_no' && isset($row['procurement_type']) && strcasecmp(trim($row['procurement_type']), 'consolidated') === 0) {
+                                    $cid = intval($row['id']);
+                                    $cres = $conn->query("SELECT 1 FROM consolidated WHERE project_id = {$cid} LIMIT 1");
+                                    if ($cres && $cres->num_rows > 0) {
+                                        $filled++;
+                                        continue;
+                                    }
                                 }
                             }
                             $percent_raw = ($total_fields > 0) ? ($filled / $total_fields) * 100.0 : 0.0;

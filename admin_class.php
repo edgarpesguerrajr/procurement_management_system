@@ -535,7 +535,50 @@ Class Action
         $uid = $_SESSION['login_id'];
         $dt = date('Y-m-d H:i:s');
         $save = $this->db->query("INSERT INTO comments (project_id,user_id,comment,date_created) VALUES ('{$project_id}','{$uid}','{$comment}','{$dt}')");
-        if ($save) return 1;
+        if ($save) {
+            // Ensure notifications table exists
+            $this->db->query("CREATE TABLE IF NOT EXISTS notifications (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                actor_id INT NOT NULL,
+                project_id INT NOT NULL,
+                message TEXT,
+                is_read TINYINT(1) DEFAULT 0,
+                created_at DATETIME
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+            // Build notification message: "[user] commented on PR no. [pr_no]"
+            $actor_q = $this->db->query("SELECT concat(firstname,' ',lastname) as name FROM users WHERE id = {$uid} LIMIT 1");
+            $actor = ($actor_q && $actor_q->num_rows > 0) ? $actor_q->fetch_array()['name'] : 'User';
+
+            // determine PR no for the project (prefer project_list.pr_no; fallback to first consolidated pr_no)
+            $pr_no = '';
+            $pqr = $this->db->query("SELECT pr_no FROM project_list WHERE id = " . intval($project_id) . " LIMIT 1");
+            if ($pqr && $pqr->num_rows > 0) {
+                $prow = $pqr->fetch_assoc();
+                $pr_no = trim((string)($prow['pr_no'] ?? ''));
+            }
+            if ($pr_no === '') {
+                $cres = $this->db->query("SELECT pr_no FROM consolidated WHERE project_id = " . intval($project_id) . " AND pr_no <> '' LIMIT 1");
+                if ($cres && $cres->num_rows > 0) {
+                    $pr_no = trim((string)$cres->fetch_assoc()['pr_no']);
+                }
+            }
+            $pr_no_display = $pr_no !== '' ? $pr_no : '&ndash;';
+            $message = $this->db->real_escape_string("{$actor} commented on PR no. {$pr_no_display}");
+
+            // Insert notification for all users except the actor
+            $users = $this->db->query("SELECT id FROM users");
+            if ($users) {
+                while ($u = $users->fetch_assoc()) {
+                    $rid = intval($u['id']);
+                    if ($rid === intval($uid)) continue; // skip sender
+                    $this->db->query("INSERT INTO notifications (user_id, actor_id, project_id, message, is_read, created_at) VALUES ({$rid}, {$uid}, " . intval($project_id) . ", '{$message}', 0, '{$dt}')");
+                }
+            }
+
+            return 1;
+        }
         return 0;
     }
 
@@ -557,6 +600,15 @@ Class Action
         }
         $delete = $this->db->query("DELETE FROM comments where id = {$id}");
         if ($delete) return 1;
+        return 0;
+    }
+
+    function mark_notifications_read()
+    {
+        if (!isset($_SESSION['login_id'])) return 0;
+        $uid = intval($_SESSION['login_id']);
+        $q = $this->db->query("UPDATE notifications SET is_read = 1 WHERE user_id = {$uid} AND is_read = 0");
+        if ($q) return 1;
         return 0;
     }
 

@@ -116,7 +116,7 @@ if(!function_exists('safeFormatDatetime')){
                             </div>
                         </div>
     
-                            <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="start_date" class="control-label">Start Date</label>
                                 <input type="date"
@@ -432,20 +432,14 @@ if(!function_exists('safeFormatDatetime')){
                     </div>
 
                     <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="bac_reso_date" class="control-label">BAC Reso Date</label>
-                                          <input type="text"
-                                              class="form-control form-control-sm datetimepicker"
-                                              autocomplete="off"
-                                              name="bac_reso_date"
-                                              id="bac_reso_date"
-                                              value="<?= safeFormatDatetime($bac_reso_date ?? '') ?>">
-                                <div class="ml-2">
-                                    <div class="form-check d-inline-block">
-                                        <input class="form-check-input auto-timestamp" type="checkbox" id="bac_reso_date_now" data-target="bac_reso_date" <?php if(isset($bac_reso_date) && $bac_reso_date !== '' && strpos($bac_reso_date,'0000-00-00') === false) echo 'checked disabled'; ?>>
-                                        <label class="form-check-label small" for="bac_reso_date_now">Received</label>
-                                    </div>
-                                </div>
+                        <div class="form-group">
+                            <label for="bac_reso_date" class="control-label">BAC Reso Date</label>
+                            <input type="date"
+                                id="bac_reso_date"
+                                name="bac_reso_date"
+                                class="form-control form-control-sm"
+                                autocomplete="off"
+                                value="<?= safeFormatDatetime($bac_reso_date ?? '','Y-m-d') ?>">
                         </div>
                     </div>
                 </div>
@@ -877,16 +871,22 @@ if(!function_exists('safeFormatDatetime')){
                             // Do not mark fields as required — allow saving without them
                             $section.find('#received_bac_third, #rfq_no, #reposting, #returned_gso_abstract').prop('required', false);
                         } else {
-                            // Without Posting: only RFQ should be available
+                            // Without Posting: show RFQ and Returned to GSO; hide other PHILGEPS fields
                             $received.hide();
                             $reposting.hide();
-                            $returned.hide();
-                            // disable all controls then enable rfq only
+                            // For 'Without Posting' we still want RFQ and Returned to GSO to be available
+                            $returned.show();
+                            // disable all controls then enable rfq and returned only
                             $section.find('input,select,textarea').prop('disabled', true).prop('required', false);
-                            // Keep RFQ enabled but do not enforce required on any field
+                            // Keep RFQ and Returned enabled but do not enforce required on any field
                             $section.find('#rfq_no').prop('disabled', false).prop('required', false);
+                            $section.find('#returned_gso_abstract').prop('disabled', false).prop('required', false);
+                            // Enable the corresponding Received checkbox for Returned so it is clickable
+                            $section.find('#returned_gso_abstract_now').prop('disabled', false);
                             // clear values for hidden/disabled fields so they are not accidentally submitted
-                            $section.find('#received_bac_third, #returned_gso_abstract').val('');
+                            $section.find('#received_bac_third').val('');
+                            // ensure hidden checkboxes are unchecked and disabled
+                            $section.find('#received_bac_third_now').prop('checked', false).prop('disabled', true);
                             $section.find('#reposting').val('');
                         }
                     }

@@ -13,6 +13,22 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
+        <!-- Notifications -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" id="notif-toggle" aria-expanded="false" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge badge-danger navbar-badge" id="notif-count" style="display:none">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="notif-menu">
+                <span class="dropdown-item dropdown-header">Notifications</span>
+                <div class="dropdown-divider"></div>
+                <div id="notif-items" style="max-height:240px;overflow:auto">
+                    <a class="dropdown-item text-center text-muted">No notifications</a>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="./index.php?page=document_list" class="dropdown-item dropdown-footer">View all</a>
+            </div>
+        </li>
         <!-- Dark mode toggle -->
         <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)" id="dark-mode-toggle" role="button" title="Toggle dark mode">
@@ -73,4 +89,71 @@
     $('#manage_account').click(function () {
         uni_modal('Manage Account', 'manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
     })
+
+    // Notifications loader
+    (function(){
+        function renderItems(items){
+            var $c = $('#notif-items');
+            $c.empty();
+            if(!Array.isArray(items) || items.length === 0){
+                $c.append('<a class="dropdown-item text-center text-muted">No notifications</a>');
+                $('#notif-count').hide();
+                return;
+            }
+            var unread = 0;
+            items.forEach(function(it){
+                if(!it.is_read) unread++;
+                var actor = escapeHtml(it.actor_name || 'User');
+                var pr = (it.pr_no && it.pr_no !== '') ? escapeHtml(it.pr_no) : '';
+                var msg = escapeHtml(it.message || '');
+                var time = escapeHtml(it.date_created || '');
+                var cls = it.is_read ? '' : 'font-weight-bold';
+                var text = '<a href="./index.php?page=view_document&id='+encodeURIComponent(it.project_id)+'&notif_id='+encodeURIComponent(it.id)+'" class="dropdown-item '+cls+'">'
+                    + '<div class="media">'
+                    + '<div class="media-body">'
+                    + '<div class="small">'+msg+'</div>'
+                    + '<div class="small text-muted">'+time+'</div>'
+                    + '</div></div></a>';
+                $c.append(text);
+                $c.append('<div class="dropdown-divider"></div>');
+            });
+            if (unread > 0) {
+                $('#notif-count').text(unread).show();
+            } else {
+                $('#notif-count').hide();
+            }
+        }
+
+        function loadNotifications(){
+            $.ajax({
+                url: 'load_notifications.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(resp){
+                    try{ renderItems(resp); }catch(e){ console.error(e); }
+                },
+                error: function(){
+                    $('#notif-items').html('<a class="dropdown-item text-center text-muted">Unable to load notifications</a>');
+                    $('#notif-count').hide();
+                }
+            });
+        }
+
+        // refresh on load and every 60s
+        $(function(){ loadNotifications(); setInterval(loadNotifications, 60000);
+            // mark notifications read when dropdown opens
+            $('#notif-toggle').closest('.dropdown').on('show.bs.dropdown', function(){
+                // mark as read via AJAX and hide badge on success
+                $.ajax({
+                    url: 'ajax.php?action=mark_notifications_read',
+                    method: 'POST',
+                    success: function(resp){
+                        try{ if((typeof resp === 'string' && resp.trim() == '1') || resp == 1){ $('#notif-count').hide(); loadNotifications(); } }
+                        catch(e){ $('#notif-count').hide(); loadNotifications(); }
+                    },
+                    error: function(){ /* ignore */ }
+                });
+            });
+        });
+    })();
 </script>
