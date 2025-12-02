@@ -247,19 +247,69 @@ Class Action
     function save_project()
     {
         extract($_POST);
-        // Server-side validation: required fields
-        $required_missing = array();
-        if (!isset($pr_no) || trim($pr_no) === '') $required_missing[] = 'PR No.';
-        if (!isset($particulars) || trim($particulars) === '') $required_missing[] = 'Particulars';
-        if (!isset($start_date) || trim($start_date) === '' || $start_date === '0000-00-00') $required_missing[] = 'Start Date';
-        if (count($required_missing) > 0) {
-            return 'Please fill required fields: ' . implode(', ', $required_missing);
+        // Normalize POST for procurement-type-specific handling:
+        // - If procurement_type is 'consolidated', ensure the top-level `particulars`
+        //   is saved as a scalar string (the single input above consolidated rows).
+        // - If procurement_type is not 'consolidated' (e.g. 'single'), coerce any
+        //   array inputs that might collide (from client DOM) into scalar values
+        //   so they are stored correctly in `project_list` and do not get
+        //   JSON-encoded as arrays.
+        $__proc_type = isset($_POST['procurement_type']) ? strtolower(trim((string)$_POST['procurement_type'])) : '';
+        if ($__proc_type === 'consolidated') {
+            if (isset($_POST['particulars']) && is_array($_POST['particulars'])) {
+                // pick the first non-empty item (top-level particulars expected first)
+                $first = '';
+                foreach ($_POST['particulars'] as $pv) {
+                    if (is_scalar($pv) && trim((string)$pv) !== '') {
+                        $first = $pv;
+                        break;
+                    }
+                }
+                $_POST['particulars'] = $first;
+                // make extracted variable reflect the change for downstream code
+                if (isset($particulars)) $particulars = $_POST['particulars'];
+            }
+            // For consolidated, keep any amount[] arrays intact — syncConsolidatedRows
+            // will sum them and update project_list.amount accordingly.
+        } else {
+            // Single (or other): ensure amount is scalar and remove any arrays that
+            // belong to consolidated rows to avoid them being json-encoded into
+            // legacy project_list columns.
+            if (isset($_POST['amount']) && is_array($_POST['amount'])) {
+                $first = '';
+                foreach ($_POST['amount'] as $av) {
+                    if (is_scalar($av) && trim((string)$av) !== '') { $first = $av; break; }
+                }
+                $_POST['amount'] = $first;
+                if (isset($amount)) $amount = $_POST['amount'];
+            }
+            // remove array-form consolidated inputs if present
+            if (isset($_POST['pr_no']) && is_array($_POST['pr_no'])) unset($_POST['pr_no']);
+            if (isset($_POST['particulars']) && is_array($_POST['particulars'])) {
+                // if an array was present, coerce to first element as top-level particulars
+                $first = '';
+                foreach ($_POST['particulars'] as $pv) {
+                    if (is_scalar($pv) && trim((string)$pv) !== '') { $first = $pv; break; }
+                }
+                $_POST['particulars'] = $first;
+                if (isset($particulars)) $particulars = $first;
+            }
+            if (isset($_POST['amount']) && is_array($_POST['amount'])) unset($_POST['amount']);
         }
+        // Server-side required-field checks removed to allow saving documents
+        // even when PR No., Particulars, or Start Date are empty. Client-side
+        // validation was also removed; perform any necessary validation elsewhere.
         $data = "";
         foreach ($_POST as $k => $v) {
             if (!in_array($k, array('id', 'user_ids')) && !is_numeric($k)) {
+                // If the POST value is an array (e.g. pr_no[], amount[], etc.),
+                // encode it as JSON so it can be safely stored in a text field
+                // for legacy columns. Consolidated rows are stored separately.
+                if (is_array($v)) {
+                    $v = json_encode($v);
+                }
                 // Preserve description HTML entities
-                if ($k == 'description')
+                if ($k == 'description' && is_string($v))
                     $v = htmlentities(str_replace("'", "&#x2019;", $v));
                 // Normalize datetime inputs from 'Y/m/d H:i' -> 'Y-m-d H:i:s' when possible
                 if (is_string($v) && preg_match('/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}$/', $v)) {
@@ -285,7 +335,16 @@ Class Action
                 return 'DB Error: ' . $e->getMessage() . ' -- Query: ' . $query;
             }
             if ($save) {
-                return $this->db->insert_id;
+                $newId = $this->db->insert_id;
+                // If consolidated, sync rows; otherwise remove any existing consolidated rows
+                // so switching to Single will clear child rows.
+                $ptype = isset($_POST['procurement_type']) ? trim((string)$_POST['procurement_type']) : '';
+                if (strtolower($ptype) === 'consolidated') {
+                    try { $this->syncConsolidatedRows($newId); } catch (Exception $_) { }
+                } else {
+                    try { $this->db->query("DELETE FROM consolidated WHERE project_id = {$newId}"); } catch (Exception $_) { }
+                }
+                return $newId;
             } else {
                 return 'DB Error: ' . $this->db->error . ' -- Query: ' . $query;
             }
@@ -298,6 +357,14 @@ Class Action
                 return 'DB Error: ' . $e->getMessage() . ' -- Query: ' . $query;
             }
             if ($save) {
+                // If consolidated, sync rows; otherwise remove existing consolidated rows
+                // for this project to reflect the switch back to Single procurement.
+                $ptype = isset($_POST['procurement_type']) ? trim((string)$_POST['procurement_type']) : '';
+                if (strtolower($ptype) === 'consolidated') {
+                    try { $this->syncConsolidatedRows($id); } catch (Exception $_) { }
+                } else {
+                    try { $this->db->query("DELETE FROM consolidated WHERE project_id = {$id}"); } catch (Exception $_) { }
+                }
                 return intval($id);
             } else {
                 return 'DB Error: ' . $this->db->error . ' -- Query: ' . $query;
@@ -391,5 +458,61 @@ Class Action
             $data[] = $row;
         }
         return json_encode($data);
+    }
+
+    /**
+     * Synchronize consolidated rows from the form into the `consolidated` table.
+     * This will delete existing rows for the project and re-insert submitted rows.
+     * Expects form fields `pr_no[]`, `amount[]`, `particulars[]` when present.
+     */
+    private function syncConsolidatedRows($projectId){
+        $projectId = intval($projectId);
+        if($projectId <= 0) return;
+        // remove existing rows for this project
+        $this->db->query("DELETE FROM consolidated WHERE project_id = {$projectId}");
+
+        $pr_nos = isset($_POST['pr_no']) && is_array($_POST['pr_no']) ? $_POST['pr_no'] : array();
+        $amounts = isset($_POST['amount']) && is_array($_POST['amount']) ? $_POST['amount'] : array();
+        $parts = isset($_POST['particulars']) && is_array($_POST['particulars']) ? $_POST['particulars'] : array();
+
+        $max = max(array(count($pr_nos), count($amounts), count($parts)));
+        $rows = array();
+        $grandTotal = 0.0;
+        // normalize and compute grand total
+        for($i = 0; $i < $max; $i++){
+            $pr = isset($pr_nos[$i]) ? trim($pr_nos[$i]) : '';
+            $amtRaw = isset($amounts[$i]) ? $amounts[$i] : '';
+            $amtClean = is_string($amtRaw) ? str_replace(',','', trim($amtRaw)) : $amtRaw;
+            $amountVal = null;
+            if($amtClean !== '' && is_numeric($amtClean)){
+                $amountVal = number_format((float)$amtClean, 2, '.', '');
+                $grandTotal += (float)$amountVal;
+            }
+            $part = isset($parts[$i]) ? trim($parts[$i]) : '';
+            if($pr === '' && $part === '' && $amountVal === null) continue;
+            $rows[] = array('pr'=>$pr, 'amount'=>$amountVal, 'part'=>$part);
+        }
+
+        // insert with row_order and grand_total
+        $now = date('Y-m-d H:i:s');
+        $rowOrder = 1;
+        foreach($rows as $r){
+            $prEsc = $this->db->real_escape_string($r['pr']);
+            $partEsc = $this->db->real_escape_string($r['part']);
+            $amountSql = ($r['amount'] === null) ? 'NULL' : "'".$this->db->real_escape_string($r['amount'])."'";
+            $grandSql = ($grandTotal > 0) ? "'".$this->db->real_escape_string(number_format($grandTotal,2,'.',''))."'" : 'NULL';
+            // Note: consolidated table column is `particular` (singular) in the DB dump
+            $sql = "INSERT INTO consolidated (project_id, pr_no, amount, particular, grand_total, row_order, created_at) VALUES ({$projectId}, '{$prEsc}', {$amountSql}, '{$partEsc}', {$grandSql}, {$rowOrder}, '{$now}')";
+            $this->db->query($sql);
+            $rowOrder++;
+        }
+
+        // update project_list.amount to reflect grand total
+        if($grandTotal > 0){
+            $gt = number_format($grandTotal, 2, '.', '');
+            $this->db->query("UPDATE project_list SET amount = '{$this->db->real_escape_string($gt)}' WHERE id = {$projectId}");
+        } else {
+            $this->db->query("UPDATE project_list SET amount = NULL WHERE id = {$projectId}");
+        }
     }
 }

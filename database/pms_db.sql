@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2025 at 06:39 AM
+-- Generation Time: Dec 02, 2025 at 02:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,28 +35,22 @@ CREATE TABLE `comments` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `comments`
+-- Table structure for table `consolidated`
 --
 
-INSERT INTO `comments` (`id`, `project_id`, `user_id`, `comment`, `date_created`) VALUES
-(1, 14, 1, 'Hello', '2025-11-24 08:30:55'),
-(2, 14, 7, 'Hello admin, sige men', '2025-11-24 08:43:35'),
-(3, 14, 1, 'sir hindi pa po nakakapirma si \r\n\r\n- person 1\r\n- person 2', '2025-11-24 08:46:50'),
-(7, 14, 1, 'Curly apostrophe — “It’s a test — café — © 2025 — 中文 — ñ”\r\n', '2025-11-24 12:57:57'),
-(11, 14, 6, 'budget officer test comment @ \' \" \" \' ! ? / = - ) ( * & ^ % $ # > < . , ` ~', '2025-11-25 08:14:35'),
-(15, 20, 1, 'bangtagal ah ah aaaaaa', '2025-11-25 15:26:56'),
-(16, 20, 1, 'wait lang boss, kokontrata na \r\nborat', '2025-11-25 15:27:10'),
-(17, 20, 1, 'pag wala pa sa isang araw\r\n\r\n\r\nsasabog lahat', '2025-11-25 15:27:22'),
-(18, 20, 1, 'The dog jumps over the fox that is sleeping soundly under the tree. Then a fruit fell off beao', '2025-11-25 15:27:48'),
-(19, 20, 1, 'Laptop pc building dog cat mouse keyboard keypad tablet phone cellphone iphone android ios personal computer tumblr mirror paper notebook book ballpen marker writer typewriting printer scanner paper cutter', '2025-11-25 15:28:45'),
-(20, 20, 1, '-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------', '2025-11-25 15:29:33'),
-(22, 21, 8, 'yorme, baka namannnnnnnnnn yung sa mpo ninakaw na ', '2025-11-25 15:37:46'),
-(23, 21, 8, 'aray koooo 22', '2025-11-25 15:37:53'),
-(24, 21, 8, 'portable power', '2025-11-25 15:38:03'),
-(25, 21, 8, 'ilang % na yung akin men charge\r\n', '2025-11-25 15:38:12'),
-(26, 21, 8, 'check ko wait', '2025-11-25 15:38:17'),
-(27, 21, 8, '80% na pre', '2025-11-25 15:38:27');
+CREATE TABLE `consolidated` (
+  `id` int(11) NOT NULL,
+  `project_id` int(30) NOT NULL,
+  `pr_no` varchar(100) DEFAULT NULL,
+  `amount` decimal(15,2) DEFAULT NULL,
+  `particular` text DEFAULT NULL,
+  `grand_total` decimal(15,2) DEFAULT NULL,
+  `row_order` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -160,9 +154,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`, `type`, `date_created`) VALUES
 (1, 'Administrator', '', 'admin@admin.com', '0192023a7bbd73250516f069df18b500', 1, '2020-11-26 10:57:04'),
-(6, 'Budget', 'Office', 'bo@user.com', '6ad14ba9986e3615423dfca256d04e3f', 2, '2025-11-21 13:28:28'),
-(7, 'Rowell', 'Polinio', 'rowell@user.com', '6ad14ba9986e3615423dfca256d04e3f', 2, '2025-11-21 16:54:08'),
-(8, 'Fundador', 'Candaza', 'Fudz@user.com', '6ad14ba9986e3615423dfca256d04e3f', 2, '2025-11-25 15:33:17');
+(6, 'Budget', 'Office', 'bo@user.com', '6ad14ba9986e3615423dfca256d04e3f', 2, '2025-11-21 13:28:28');
 
 --
 -- Indexes for dumped tables
@@ -175,6 +167,13 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `consolidated`
+--
+ALTER TABLE `consolidated`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_consolidated_project_id` (`project_id`);
 
 --
 -- Indexes for table `project_list`
@@ -205,10 +204,16 @@ ALTER TABLE `comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
+-- AUTO_INCREMENT for table `consolidated`
+--
+ALTER TABLE `consolidated`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `project_list`
 --
 ALTER TABLE `project_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `system_settings`
@@ -221,6 +226,16 @@ ALTER TABLE `system_settings`
 --
 ALTER TABLE `users`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `consolidated`
+--
+ALTER TABLE `consolidated`
+  ADD CONSTRAINT `fk_consolidated_project` FOREIGN KEY (`project_id`) REFERENCES `project_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

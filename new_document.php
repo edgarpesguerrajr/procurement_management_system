@@ -21,7 +21,7 @@ if(!function_exists('safeFormatDatetime')){
 <div class="col-lg-12">
     <div class="card card-outline card-primary">
         <div class="card-body">
-            <form action="" id="manage-project">
+            <form action="" id="manage-project" novalidate>
 
                 <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
 
@@ -79,22 +79,23 @@ if(!function_exists('safeFormatDatetime')){
                 </div>
 
                 <!--------------------- CONSOLIDATED --------------------->
-                <div id="consolidated_preview" <?= (isset($procurement_type) && $procurement_type === 'consolidated') ? '' : 'style="display:none;"' ?>>
+                <!-- Show this block only for 'consolidated' procurement_type -->
+                <div id="consolidated_section" <?= (isset($procurement_type) && $procurement_type === 'consolidated') ? '' : 'style="display:none;"' ?> >
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Particulars</label>
+                                <label class="control-label">Document</label>
                                 <input type="text" class="form-control form-control-sm" autocomplete="off" name="particulars" value="<?= htmlspecialchars($particulars ?? '', ENT_QUOTES) ?>">
                             </div>
                         </div>
-
+    
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Grand Total</label>
                                 <input type="text" id="consolidated_grand_total" class="form-control form-control-sm amount-input" autocomplete="off" name="amount" value="<?= htmlspecialchars($amount ?? '', ENT_QUOTES) ?>" readonly>
                             </div>
                         </div>
-
+    
                             <div class="col-md-3">
                             <div class="form-group">
                                 <label for="start_date" class="control-label">Start Date</label>
@@ -107,9 +108,6 @@ if(!function_exists('safeFormatDatetime')){
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Show this block only for 'consolidated' procurement_type -->
-                <div id="consolidated_section" <?= (isset($procurement_type) && $procurement_type === 'consolidated') ? '' : 'style="display:none;"' ?> >
                     <div class="row border-top pt-3">
                         <div class="col-sm-12">
                             <b class="border-bottom border-primary">For Consolidated</b>
@@ -135,12 +133,13 @@ if(!function_exists('safeFormatDatetime')){
                                 $grand_total = 0;
                                 if(isset($id) && !empty($id) && isset($conn)){
                                     $pid = intval($id);
-                                    $res = $conn->query("SELECT pr_no, amount, particulars FROM consolidated WHERE project_id = {$pid} ORDER BY id ASC");
+                                    // consolidated table uses column `particular` (singular)
+                                    $res = $conn->query("SELECT pr_no, amount, particular, grand_total, row_order FROM consolidated WHERE project_id = {$pid} ORDER BY COALESCE(row_order,id) ASC");
                                     if($res && $res->num_rows > 0){
                                         while($row = $res->fetch_assoc()){
                                             $pr_nos[] = $row['pr_no'];
                                             $amounts[] = $row['amount'];
-                                            $parts[] = $row['particulars'];
+                                            $parts[] = $row['particular'];
                                             $grand_total += (float)$row['amount'];
                                         }
                                         // set scalar amount (grand total) for preview; keep plain numeric (no commas)
@@ -155,9 +154,9 @@ if(!function_exists('safeFormatDatetime')){
                                             if(is_array($amount)) $amounts = $amount;
                                             elseif($amount !== '') $amounts = [$amount];
                                         }
-                                        if(isset($particulars)){
-                                            if(is_array($particulars)) $parts = $particulars;
-                                            elseif($particulars !== '') $parts = [$particulars];
+                                        if(isset($particular)){
+                                            if(is_array($particular)) $parts = $particular;
+                                            elseif($particular !== '') $parts = [$particular];
                                         }
                                     }
                                 } else {
@@ -170,9 +169,9 @@ if(!function_exists('safeFormatDatetime')){
                                         if(is_array($amount)) $amounts = $amount;
                                         elseif($amount !== '') $amounts = [$amount];
                                     }
-                                    if(isset($particulars)){
-                                        if(is_array($particulars)) $parts = $particulars;
-                                        elseif($particulars !== '') $parts = [$particulars];
+                                    if(isset($particular)){
+                                        if(is_array($particular)) $parts = $particular;
+                                        elseif($particular !== '') $parts = [$particular];
                                     }
                                 }
                                 $max = max([count($pr_nos), count($amounts), count($parts), 1]);
@@ -842,8 +841,8 @@ if(!function_exists('safeFormatDatetime')){
                             $reposting.show();
                             $returned.show();
                             $section.find('input,select,textarea').prop('disabled', false);
-                            // set required where appropriate
-                            $section.find('#received_bac_third, #rfq_no, #reposting, #returned_gso_abstract').prop('required', true);
+                            // Do not mark fields as required — allow saving without them
+                            $section.find('#received_bac_third, #rfq_no, #reposting, #returned_gso_abstract').prop('required', false);
                         } else {
                             // Without Posting: only RFQ should be available
                             $received.hide();
@@ -851,7 +850,8 @@ if(!function_exists('safeFormatDatetime')){
                             $returned.hide();
                             // disable all controls then enable rfq only
                             $section.find('input,select,textarea').prop('disabled', true).prop('required', false);
-                            $section.find('#rfq_no').prop('disabled', false).prop('required', true);
+                            // Keep RFQ enabled but do not enforce required on any field
+                            $section.find('#rfq_no').prop('disabled', false).prop('required', false);
                             // clear values for hidden/disabled fields so they are not accidentally submitted
                             $section.find('#received_bac_third, #returned_gso_abstract').val('');
                             $section.find('#reposting').val('');
@@ -1295,21 +1295,8 @@ $(document).on('input change', '#manage-project input, #manage-project select, #
     $('#manage-project').submit(function (e) {
         e.preventDefault()
 
-        // Client-side validation for required fields
-        var pr_no = $.trim($('[name="pr_no"]').val() || '');
-        var particulars = $.trim($('[name="particulars"]').val() || '');
-        var start_date = $.trim($('[name="start_date"]').val() || '');
-
-        var missing = [];
-        if (!pr_no) missing.push('PR No.');
-        if (!particulars) missing.push('Particulars');
-        if (!start_date) missing.push('Start Date');
-
-        if (missing.length > 0) {
-            var msg = 'Please fill the following required fields: ' + missing.join(', ');
-            alert_toast(msg, 'warning');
-            return false;
-        }
+        // Client-side required-field validation removed so documents can be saved
+        // regardless of empty fields. Server-side should still validate if needed.
 
         // Ensure numeric fields are sent without thousands separators
         $('[name="amount"], #contract_cost').each(function(){
