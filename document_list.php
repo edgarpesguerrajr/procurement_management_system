@@ -4,12 +4,12 @@
         <div class="card-header">
             <?php if($_SESSION['login_type'] != 3): ?>
             <div class="card-tools">
-                <a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_document"><i class="fa fa-plus"></i> Add New Document</a>
+                <a class="btn btn-block btn-sm btn-default btn-flat border-success" href="./index.php?page=new_document"><i class="fa fa-plus"></i> Add New Document</a>
             </div>
             <?php endif; ?>
         </div>
         <div class="card-body">
-            <table class="table tabe-hover table-condensed" id="list">
+            <table class="table table-hover" id="list">
                 <colgroup>
                     <col width="10%">
                     <col width="30%">
@@ -104,11 +104,18 @@
                                 'po_no','po_date','air_no','air_date','received_treasury_first','received_bo_first','received_bo_second',
                                 'return_gso_completion','received_accounting_first','received_treasury_second','received_mo',
                                 'received_treasury_third','received_admin','received_accounting_second','received_treasury_fourth',
-                                'cheque_no'
+                                'cheque_no','paid'
                             );
                             $total_fields = count($fields_to_check);
                             $filled = 0;
                             foreach($fields_to_check as $f){
+                                // Special-case: count the `paid` checkbox only when it's checked
+                                if($f === 'paid'){
+                                    if(isset($row['paid']) && in_array(strtolower(trim((string)$row['paid'])), array('1','yes','true'))){
+                                        $filled++;
+                                    }
+                                    continue;
+                                }
                                 $val = '';
                                 if(isset($row[$f])) $val = trim((string)$row[$f]);
                                 // treat values containing SQL zero-dates as empty
