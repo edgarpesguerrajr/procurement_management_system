@@ -63,7 +63,12 @@
                                         $row['status'] = 2;
                                     else
                                         $row['status'] = 1;
-                                elseif ($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                                elseif ($row['status'] == 0
+                                    && isset($row['end_date'])
+                                    && trim((string)$row['end_date']) !== ''
+                                    && strpos($row['end_date'], '0000-00-00') === false
+                                    && strtotime(date('Y-m-d')) > strtotime($row['end_date'])
+                                ):
                                     $row['status'] = 4;
                                 endif;
                             ?>

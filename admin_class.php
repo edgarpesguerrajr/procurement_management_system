@@ -506,6 +506,8 @@ Class Action
                             }
                         }
                     }catch(Exception $_){ }
+                    // Return the newly created record id so the AJAX caller receives it
+                    return intval($newId);
                 }
             } else {
                 return 'DB Error: ' . $this->db->error . ' -- Query: ' . $query;

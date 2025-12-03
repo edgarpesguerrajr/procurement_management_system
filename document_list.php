@@ -12,11 +12,11 @@
             <table class="table tabe-hover table-condensed" id="list">
                 <colgroup>
                     <col width="10%">
-                    <col width="35%">
-                    <col width="15%">
+                    <col width="30%">
                     <col width="15%">
                     <col width="15%">
                     <col width="10%">
+                    <col width="20%">
                 </colgroup>
                 <thead>
                     <tr>
@@ -25,7 +25,7 @@
                         <th>Date Started</th>
                         <th>Progress</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,7 +52,12 @@
                                 $row['status'] = 2;
                             else
                                 $row['status'] = 1;
-                        elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                        elseif($row['status'] == 0
+                            && isset($row['end_date'])
+                            && trim((string)$row['end_date']) !== ''
+                            && strpos($row['end_date'], '0000-00-00') === false
+                            && strtotime(date('Y-m-d')) > strtotime($row['end_date'])
+                        ):
                             $row['status'] = 4;
                         endif;
                     ?>
@@ -150,18 +155,17 @@
                             ?>
                         </td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-default btn-sm btn-flat border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            Action
-                            </button>
-                            <div class="dropdown-menu">
-                            <a class="dropdown-item view_project" href="./index.php?page=view_document&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">View</a>
-                            <div class="dropdown-divider"></div>
+                            <a class="action-btn btn btn-light border view_project" href="./index.php?page=view_document&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
                             <?php if($_SESSION['login_type'] != 3): ?>
-                            <a class="dropdown-item" href="./index.php?page=edit_document&id=<?php echo $row['id'] ?>">Edit</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>
-                        <?php endif; ?>
-                            </div>
+                                <a class="action-btn btn btn-light border text-primary" href="./index.php?page=edit_document&id=<?php echo $row['id'] ?>" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="action-btn btn btn-danger text-white delete_project" data-id="<?php echo $row['id'] ?>" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endwhile; ?>
@@ -177,6 +181,22 @@
     table td{
         vertical-align: middle !important
     }
+    /* Action button styles: compact square icon buttons */
+    .action-btn{
+        width:30px;
+        height:30px;
+        padding:0;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:4px;
+        margin:0 4px;
+        line-height:1;
+    }
+    .action-btn .fas{ font-size:14px; }
+    .action-btn.btn-light{ background:#fff; color:#333; }
+    .action-btn.btn-light.border{ border-color:#dee2e6; }
+    .action-btn.btn-danger{ background:#e74c3c; border-color:#e74c3c; color:#fff; }
 </style>
 <script>
     $(document).ready(function(){
